@@ -8,4 +8,5 @@ object Hello {
     println("Hello, " + student.name)
     println("Das ist ein Test")
   }
+  //Dies ist ein Test für Git
 }
