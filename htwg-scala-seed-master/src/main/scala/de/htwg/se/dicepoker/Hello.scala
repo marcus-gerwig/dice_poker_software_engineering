@@ -1,10 +1,10 @@
-package de.htwg.se.yourgame
+package de.htwg.se.dicepoker
 
-import de.htwg.se.yourgame.model.Student
+import de.htwg.se.dicepoker.model.Student
 
 object Hello {
   def main(args: Array[String]): Unit = {
-    val student = Student("Marcus")
+    val student = Student("Anderl")
     println("Hello, " + student.name)
     println("Das ist ein Test")
   }
