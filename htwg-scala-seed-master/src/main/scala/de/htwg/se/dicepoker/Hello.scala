@@ -7,6 +7,7 @@ object Hello {
     val student = Student("Anderl")
     println("Hello, " + student.name)
     println("Das ist ein Test")
+    //Dies ist ein Kommentar zum Testen des Branching
   }
   //Dies ist ein Test für Git
 }
