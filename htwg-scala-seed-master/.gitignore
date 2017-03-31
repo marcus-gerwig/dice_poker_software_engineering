@@ -6,6 +6,9 @@ bin/
 .settings/
 .classpath
 
+.cache-main
+.cache-tests
+
 # Intellij
 .idea/
 target/
