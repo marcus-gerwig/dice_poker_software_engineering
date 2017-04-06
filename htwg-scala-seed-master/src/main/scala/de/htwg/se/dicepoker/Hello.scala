@@ -7,8 +7,8 @@ import de.htwg.se.dicepoker.model.Die
 object Hello {
   def main(args: Array[String]): Unit = {
     val student = Student("Anderl")
-    val fstDie: Die = new Die(5)
-    val secDie = new Die(5)
+    val fstDie: Die = new Die
+    val secDie = new Die
     val dieArray = Array(fstDie, secDie)
     val cup = new DiceCup(5, dieArray)
     println("Hello, " + student.name)
