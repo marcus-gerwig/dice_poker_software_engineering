@@ -10,7 +10,7 @@ object Hello {
     val fstDie: Die = new Die
     val secDie = new Die
     val dieArray = Array(fstDie, secDie)
-    val cup = new DiceCup(5, dieArray)
+    val cup = new DiceCup(dieArray, dieArray)
     println("Hello, " + student.name)
     println("Das ist ein Test")
 
