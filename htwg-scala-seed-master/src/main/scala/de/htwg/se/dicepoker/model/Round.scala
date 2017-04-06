@@ -1,5 +1,5 @@
 package de.htwg.se.dicepoker.model
 
-class Round(highestBid: Bid) {
+case class Round(highestBid: Bid) {
   
 }

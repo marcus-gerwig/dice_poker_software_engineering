@@ -1,5 +1,5 @@
 package de.htwg.se.dicepoker.model
 
-class Die (dieValue: Int) {
+case class Die (dieValue: Int) {
   
 }
