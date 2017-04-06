@@ -11,4 +11,17 @@ class DieSpec extends WordSpec {
     }
   }
 
+  "Two dice" can {
+    "have the same value" in {
+      val fstDie = Die(5)
+      val secDie = Die(5)
+      fstDie.sameValueAs(secDie) should be(true)
+    }
+    "have different values" in {
+      val fstDie = Die(5)
+      val secDie = Die(4)
+      fstDie.sameValueAs(secDie) should be(false)
+    }
+  }
+
 }

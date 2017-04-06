@@ -8,17 +8,13 @@ import de.htwg.se.dicepoker.model.ThrowADie
 object Hello {
   def main(args: Array[String]): Unit = {
     val student = Student("Anderl")
-    val fstDie: Die = Die(ThrowADie.throwDie)
-    val secDie =  Die(ThrowADie.throwDie)
-    fstDie.dieValue = ThrowADie.throwDie
-    val dieArray = Array(fstDie, secDie)
-    val cup = new DiceCup(dieArray, dieArray)
-    println("Hello, " + student.name)
-    println("Das ist ein Test")
+    val fstDie = Die(ThrowADie.throwDie)
+    val secDie = Die(ThrowADie.throwDie)
+    println(fstDie sameValueAs secDie)
+    println(fstDie.dieValue + " " + secDie.dieValue)
 
-    //Dies ist ein Kommentar zum Testen des Branching
-    dieArray.foreach { wuerfel: Die => println("This is die with hashCode " + wuerfel.hashCode()) }
-    
+    val cup = new DiceCup(Array(fstDie, secDie))
+    cup.shakeCup
+    println(fstDie.dieValue + " " + secDie.dieValue)
   }
-  //Dies ist ein Test für Git
 }
