@@ -1,7 +1,7 @@
 package de.htwg.se.dicepoker.model
 
 
-case class DiceCup(actualDice: Array[Die], highestDieCombination: Array[Die]) {
+case class DiceCup(actualDice: Array[Die], var highestDieCombination: Array[Die]) {
   def this(actualDice: Array[Die]) {
     this(actualDice, null)
   }

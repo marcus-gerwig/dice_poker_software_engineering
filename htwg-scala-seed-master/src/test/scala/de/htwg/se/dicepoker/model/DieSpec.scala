@@ -6,7 +6,7 @@ import org.scalatest.Matchers._
 class DieSpec extends WordSpec {
   "A Die" should {
     "have a value between 1 and 6" in {
-      val die = new Die
+      val die = Die(ThrowADie.throwDie)
       die.dieValue should (be >= 1 and be <= 6)
     }
   }
