@@ -1,11 +1,6 @@
 package de.htwg.se.dicepoker.model
+import scala.util.Random
+case class DiceCup(var highestDieCombination: List[Die] = Nil) {
 
-
-case class DiceCup(var highestDieCombination: List[Die]=Nil) {
- 
-  
-  def roll:List[Int] = {
-    val actualDice = List(new Die, new Die, new Die, new Die, new Die)
-    for (die:Die <- actualDice)  yield die.roll 
-  }
+  def roll(numberOfDice: Int): List[Int] = (0 to numberOfDice).toList.map( x => Random.nextInt(6)+1)
 }
