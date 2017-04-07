@@ -1,5 +1,10 @@
 package de.htwg.se.dicepoker.model
 
-class DiceCup (numberOfDice: Int, highestDieCombination: Array[Die]){
-  
+
+case class DiceCup(actualDice: Array[Die], var highestDieCombination: Array[Die]) {
+  def this(actualDice: Array[Die]) {
+    this(actualDice, null)
+  }
+
+  def shakeCup = actualDice.foreach { die: Die => die.dieValue = ThrowADie.throwDie }
 }

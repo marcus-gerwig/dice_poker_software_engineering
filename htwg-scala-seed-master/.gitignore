@@ -6,6 +6,11 @@ bin/
 .settings/
 .classpath
 
+.cache-main
+.cache-tests
+
+src/main/scala/de/htwg/se/dicepoker/Main.scala
+
 # Intellij
 .idea/
 target/
