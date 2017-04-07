@@ -1,10 +1,11 @@
 package de.htwg.se.dicepoker.model
 
 
-case class DiceCup(actualDice: Array[Die], var highestDieCombination: Array[Die]) {
-  def this(actualDice: Array[Die]) {
-    this(actualDice, null)
+case class DiceCup(var highestDieCombination: List[Die]=Nil) {
+ 
+  
+  def roll:List[Int] = {
+    val actualDice = List(new Die, new Die, new Die, new Die, new Die)
+    for (die:Die <- actualDice)  yield die.roll 
   }
-
-  def shakeCup = actualDice.foreach { die: Die => die.dieValue = ThrowADie.throwDie }
 }
