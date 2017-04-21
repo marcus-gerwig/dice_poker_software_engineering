@@ -1,7 +1,6 @@
 package de.htwg.se.dicepoker.model
 
-import org.scalatest._
-import org.scalatest.Matchers._
+import org.scalatest.{Matchers, WordSpec}
 
 class DieSpec extends WordSpec {
 //  "A Die" should {
