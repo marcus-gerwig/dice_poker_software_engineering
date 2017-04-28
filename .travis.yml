@@ -3,6 +3,6 @@ scala:
 - 2.11.8
 
 script:
-- sbt clean coverage test coverageReport
+- sbt clean test
 notifications:
   email: false
