@@ -1,5 +1,5 @@
 package de.htwg.se.dicepoker.model
 
-case class Bid (bidFrequency: Int, bidDieValue: Int, bidPlayer: Player) {
+case class Bid (bidResult: Result, bidPlayer: Player) {
   
 }
