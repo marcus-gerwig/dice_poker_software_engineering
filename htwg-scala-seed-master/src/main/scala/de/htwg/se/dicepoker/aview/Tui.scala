@@ -1,4 +1,4 @@
-package aView
+package de.htwg.se.dicepoker.aview
 
 import de.htwg.se.dicepoker.controller.DPController
 
