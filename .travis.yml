@@ -3,7 +3,7 @@ scala:
 - 2.11.8
 
 script:
-- cd ./htwg-scala-seed-master/
+- cd ./dicePoker/
 - sbt clean coverage test coverageReport
 notifications:
   email: false
