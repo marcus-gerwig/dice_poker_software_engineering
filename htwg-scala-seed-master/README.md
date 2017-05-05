@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/marcus-gerwig/software_engineering_boger.svg?branch=master)](https://travis-ci.org/marcus-gerwig/software_engineering_boger)
+
 htwg-scala-seed
 =========================
 
