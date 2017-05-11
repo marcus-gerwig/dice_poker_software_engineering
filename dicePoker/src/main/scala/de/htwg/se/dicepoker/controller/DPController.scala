@@ -7,11 +7,6 @@ import de.htwg.se.dicepoker.model.Round
 class DPController(var table: PokerTable) extends Observable {
 
   def startGame(players: Vector[Player]): Unit = {
-    //createPokerTable(players)
-    table = new PokerTable(players)
-  }
-
-  def createPokerTable(players: Vector[Player]): Unit = {
     table = new PokerTable(players)
   }
 

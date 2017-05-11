@@ -2,7 +2,7 @@ package de.htwg.se.dicepoker.model
 
 case class PokerTable(players: Vector[Player]) {
   def addPlayer(newPlayer: Player) = copy(players :+ newPlayer)
-  def numberOfPlayers = players.size
+  def numberOfPlayers = players.length
 
   def rollTheDice = {
     var newPlayers: Vector[Player] = Vector()
