@@ -1,10 +1,18 @@
- 
+
 
 package de.htwg.se.dicepoker.model
 import scala.util.Random
 
-case class DiceCup(dieCombi: List[Int] = Nil) {
+case class DiceCup(dieCombi: List[Int]) {
 
+  def this() = this(Nil)
+  override def toString = {
+    var string = ""
+    for (d <- dieCombi) {
+      string.+(" "+d)
+    }
+    string
+  }
   def roll(numDice: Int): DiceCup = copy((1 to numDice).toList.map(x => scala.util.Random.nextInt(6) + 1))
   def countTuples(list: List[Int]): Map[Int, Int] = list.groupBy(l => l).map(t => (t._1, t._2.length))
   def cupHasTuples(tuples: Map[Int, Int]): Boolean = if (tuples.values.max > 1) true else false

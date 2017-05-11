@@ -6,13 +6,51 @@ import de.htwg.se.dicepoker.model.PokerTable
 import de.htwg.se.dicepoker.model.DiceCup
 import de.htwg.se.dicepoker.model.Round
 import de.htwg.se.dicepoker.util.Observer
+import de.htwg.se.dicepoker.util.AppConst
 
 class Tui(controller: DPController) extends Observer {
 
   controller.add(this)
-  def processInputLine(input: String): Unit = {
-
+  controller.startGame(initPlayer(AppConst.number_of_player))
+  explainCommands
+  
+  def initPlayer(number: Int) = {
+    var players: Vector[Player] = Vector.empty
+    println("Welcome to Dice Poker!")
+    for (i <- 1 to number) {
+      println("Hello Player " + i)
+      println("Please enter your name:")
+      val name = scala.io.StdIn.readLine()
+      println("")
+      players =  players :+ controller.newPlayer(name)
+    }
+    println("Alright, let the show begin...")
+    players
   }
+
+  def processInputLine(): Boolean = {
+    println("INPUT:")
+    var continue = true;
+    val input = scala.io.StdIn.readLine()
+    input match {
+      case "q" => {
+        exitMessage
+        continue = false
+      }
+      case "s" =>{
+        
+      }
+      case "r" => 
+    }
+    
+    continue
+  }
+  
+  
+ 
+  def explainCommands:Unit = println("start game: 's' | exit game: 'q' | restart: 'r'")
+  def exitMessage = println("The game is over. See you soon!")
+  
   def startGame2P {
     println("Press 's' to start game with 2 Players")
     println("Enter name of Player 1:")
@@ -20,21 +58,21 @@ class Tui(controller: DPController) extends Observer {
     println("Enter name of Player 2:")
     val player2 = new Player("Andy", null, 5, null)
 
-    val playerlist: List[Player] = List(player1, player2)
+    val playerlist: Vector[Player] = Vector(player1, player2)
 
     val table = new PokerTable(playerlist)
 
     println("A 2 Player game was started!")
 
-    val diceCupP1 = new DiceCup(Nil)
+    var diceCupP1 = new DiceCup
 
-    diceCupP1.roll(player1.diceCount)
+    diceCupP1 = diceCupP1.roll(player1.diceCount)
 
-    val diceCupP2 = new DiceCup(Nil)
+    var diceCupP2 = new DiceCup
 
-    diceCupP2.roll(player2.diceCount)
+    diceCupP2 = diceCupP2.roll(player2.diceCount)
 
-    val round = new Round(null)
+    val round = new Round()
 
     while (!player1.hasLostGame || !player2.hasLostGame) {
 
@@ -79,5 +117,5 @@ class Tui(controller: DPController) extends Observer {
 
   }
 
-  override def update: Unit = println("")
+  override def update: Unit = PokerTable.toString()
 }

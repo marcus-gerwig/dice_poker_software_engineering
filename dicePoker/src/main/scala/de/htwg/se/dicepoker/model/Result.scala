@@ -5,7 +5,7 @@ case class Result(dieValue: Int, frequency: Int) {
 
   override def toString: String = {
     var result = "" + dieValue
-    for (i <- 0 until frequency - 1) {
+    for (i <- 0 to frequency) {
       result += " " + dieValue
     }
     return result

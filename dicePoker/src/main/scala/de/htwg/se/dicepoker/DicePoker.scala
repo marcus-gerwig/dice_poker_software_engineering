@@ -11,11 +11,10 @@ object DicePoker {
   controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
-    var input: String = ""
-
+    var continue: Boolean = true
     do {
-      input = readLine()
-      tui.processInputLine(input)
-    } while (input != "q")
+      continue = tui.processInputLine()
+    } while (continue)
+
   }
 }
