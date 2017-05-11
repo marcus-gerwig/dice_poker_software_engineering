@@ -8,7 +8,7 @@ object DicePoker {
 
   val controller = new DPController(null)
   val tui = new Tui(controller)
-  //controller.notifyObservers
+  controller.notifyObservers
 
   def main(args: Array[String]): Unit = {
     var input: String = ""
