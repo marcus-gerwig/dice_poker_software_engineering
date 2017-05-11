@@ -1,19 +1,20 @@
 package de.htwg.se.dicepoker.aview
 
 import de.htwg.se.dicepoker.controller.DPController
-import de.htwg.se.dicepoker.model.Player
-import de.htwg.se.dicepoker.model.PokerTable
-import de.htwg.se.dicepoker.model.DiceCup
-import de.htwg.se.dicepoker.model.Round
+import de.htwg.se.dicepoker.model.{ _ }
+
 import de.htwg.se.dicepoker.util.Observer
 import de.htwg.se.dicepoker.util.AppConst
+
+import scala.compat.Platform.EOL
 
 class Tui(controller: DPController) extends Observer {
 
   controller.add(this)
-  controller.startGame(initPlayer(AppConst.number_of_player))
+  val players = initPlayer(AppConst.number_of_player)
+  controller.startGame(players)
   explainCommands
-  
+
   def initPlayer(number: Int) = {
     var players: Vector[Player] = Vector.empty
     println("Welcome to Dice Poker!")
@@ -22,7 +23,7 @@ class Tui(controller: DPController) extends Observer {
       println("Please enter your name:")
       val name = scala.io.StdIn.readLine()
       println("")
-      players =  players :+ controller.newPlayer(name)
+      players = players :+ controller.newPlayer(name)
     }
     println("Alright, let the show begin...")
     players
@@ -37,20 +38,36 @@ class Tui(controller: DPController) extends Observer {
         exitMessage
         continue = false
       }
-      case "s" =>{
-        
+      case "s" => {
+        while (!controller.gameIsOver) newRound
       }
-      case "r" => 
+      case "r" =>
     }
-    
+
     continue
   }
-  
-  
- 
-  def explainCommands:Unit = println("start game: 's' | exit game: 'q' | restart: 'r'")
+
+  def explainCommands: Unit = println("start game: 's' | exit game: 'q' | restart: 'r'")
   def exitMessage = println("The game is over. See you soon!")
-  
+
+  def newRound: Unit = {
+    controller.rolling
+    val playerStarts = controller.whichPlayerStarts
+    val playerFollows = controller.whichPlayerFollows(playerStarts)
+    var input = ""
+
+    do {
+      println(playerStarts.name + ", please declare your bid (e.g. 3,2 /means your bid is a double of 3):")
+      input = scala.io.StdIn.readLine()
+    } while (!controller.bidIsValid(input))
+    val bid = controller.newBid(input, playerStarts)
+    var round = controller.newRound(bid)
+    println("-- Highest bid at the moment = " + controller.getHighestBid(round).bidResult)
+    println("-- Now it's your turn " + playerFollows.name)
+  }
+
+  override def update: Unit = println(EOL + controller.table.toString())
+
   def startGame2P {
     println("Press 's' to start game with 2 Players")
     println("Enter name of Player 1:")
@@ -72,7 +89,7 @@ class Tui(controller: DPController) extends Observer {
 
     diceCupP2 = diceCupP2.roll(player2.diceCount)
 
-    val round = new Round()
+    val round = new Round(null)
 
     while (!player1.hasLostGame || !player2.hasLostGame) {
 
@@ -117,5 +134,4 @@ class Tui(controller: DPController) extends Observer {
 
   }
 
-  override def update: Unit = PokerTable.toString()
 }

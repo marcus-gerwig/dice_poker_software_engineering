@@ -9,7 +9,7 @@ case class DiceCup(dieCombi: List[Int]) {
   override def toString = {
     var string = ""
     for (d <- dieCombi) {
-      string.+(" "+d)
+      string += d + " "
     }
     string
   }
