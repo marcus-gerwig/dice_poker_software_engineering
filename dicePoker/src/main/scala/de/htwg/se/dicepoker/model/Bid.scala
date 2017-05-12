@@ -12,6 +12,11 @@ case class Bid(bidResult: Result, bidPlayer: Player) {
     }
   }
 
-  def convertStringToBid(input: String): Bid = copy(new Result(input.charAt(0).asDigit, input.charAt(2).asDigit),this.bidPlayer)
-
+  def convertStringToBid(input: String): Bid = copy(new Result(input.charAt(0).asDigit, input.charAt(2).asDigit), this.bidPlayer)
+  def doesPlayerLie: Boolean = {
+    val hisDiceCup = this.bidPlayer.diceCup
+    val hisActualResult = hisDiceCup.getMaxResult()
+    if (bidResult.isHigherThan(hisActualResult)) true
+    else false
+  }
 }

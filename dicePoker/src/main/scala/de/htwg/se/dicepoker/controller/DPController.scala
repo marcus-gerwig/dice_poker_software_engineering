@@ -3,6 +3,8 @@ package de.htwg.se.dicepoker.controller
 import de.htwg.se.dicepoker.model.{ PokerTable, Player, Bid }
 import de.htwg.se.dicepoker.util.Observable
 import de.htwg.se.dicepoker.model.Round
+import de.htwg.se.dicepoker.util.DiceWereRollen
+import de.htwg.se.dicepoker.util.PlayerHasWon
 
 class DPController(var table: PokerTable) extends Observable {
 
@@ -12,7 +14,7 @@ class DPController(var table: PokerTable) extends Observable {
 
   def rolling: Unit = {
     table = table.rollTheDice
-    notifyObservers
+    notifyObservers(PlayerHasWon)
   }
 
   def newPlayer(name: String): Player = new Player(name)
@@ -27,6 +29,7 @@ class DPController(var table: PokerTable) extends Observable {
     }
     playerFollows
   }
+  //TODO: def solveRound: Player
 
   def gameIsOver: Boolean = {
     for (p <- table.players) {
