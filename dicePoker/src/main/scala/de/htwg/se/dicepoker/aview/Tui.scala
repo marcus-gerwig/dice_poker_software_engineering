@@ -7,6 +7,9 @@ import de.htwg.se.dicepoker.util.Observer
 import de.htwg.se.dicepoker.util.AppConst
 
 import scala.compat.Platform.EOL
+import de.htwg.se.dicepoker.util.Event
+import de.htwg.se.dicepoker.util.DiceWereRollen
+import de.htwg.se.dicepoker.util.PlayerHasWon
 
 class Tui(controller: DPController) extends Observer {
 
@@ -21,7 +24,7 @@ class Tui(controller: DPController) extends Observer {
     for (i <- 1 to number) {
       println("Hello Player " + i)
       println("Please enter your name:")
-      val name = scala.io.StdIn.readLine()
+      val name = readLine
       println("")
       players = players :+ controller.newPlayer(name)
     }
@@ -32,7 +35,7 @@ class Tui(controller: DPController) extends Observer {
   def processInputLine(): Boolean = {
     println("INPUT:")
     var continue = true;
-    val input = scala.io.StdIn.readLine()
+    val input = readLine
     input match {
       case "q" => {
         exitMessage
@@ -58,16 +61,32 @@ class Tui(controller: DPController) extends Observer {
 
     do {
       println(playerStarts.name + ", please declare your bid (e.g. 3,2 /means your bid is a double of 3):")
-      input = scala.io.StdIn.readLine()
+      input = readLine
     } while (!controller.bidIsValid(input))
     val bid = controller.newBid(input, playerStarts)
     var round = controller.newRound(bid)
     println("-- Highest bid at the moment = " + controller.getHighestBid(round).bidResult)
     println("-- Now it's your turn " + playerFollows.name)
+    println("-- Do you mistrust "+playerStarts.name+" or do you want to set a higher bid?")
+    println("mistrust: 'm' | setHigherBid: 'b')")
+    val resp = readLine
+    resp match {
+      case "m" =>
+      case "b" => {
+
+      }
+    }
   }
 
-  override def update: Unit = println(EOL + controller.table.toString())
+  override def update(e: Event): Unit = {
+    e match {
+      case DiceWereRollen => println(EOL + controller.table.toString())
+      case PlayerHasWon => println("Congratulations!")
+    }
 
+  }
+
+  def readLine = scala.io.StdIn.readLine()
   def startGame2P {
     println("Press 's' to start game with 2 Players")
     println("Enter name of Player 1:")
