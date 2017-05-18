@@ -60,7 +60,7 @@ class DPController(var table: PokerTable) extends Observable {
 
   }
 
-  def bidIsValid(input: String): Boolean = new Bid().inputIsValidBid(input)
+  def bidIsValid(input: String, player:Player): Boolean = new Bid().inputIsValidBid(input, player)
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
 
 }

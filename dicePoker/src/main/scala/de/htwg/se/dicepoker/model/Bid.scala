@@ -4,10 +4,11 @@ import scala.util.matching
 case class Bid(bidResult: Result, bidPlayer: Player) {
   def this() = this(null, null)
 
-  def inputIsValidBid(input: String): Boolean = {
-    val date = raw"[1-6],[1-6]".r
+  def inputIsValidBid(input: String, player: Player): Boolean = {
+    val date = raw"([1-6]),([1-9])".r
     input match {
-      case date(_*) => true
+      //case date(_*) => true
+      case date(value, freq) => if (freq.toInt <= player.diceCount) true else false
       case _ => false
     }
   }

@@ -13,6 +13,7 @@ import de.htwg.se.dicepoker.util.PlayerHasWon
 
 class Tui(controller: DPController) extends Observer {
 
+  var playerLostLastRound: Player = new Player(null)
   controller.add(this)
   val players = initPlayer(AppConst.number_of_player)
   controller.startGame(players)
@@ -60,14 +61,14 @@ class Tui(controller: DPController) extends Observer {
 
   def newRound: Unit = {
     controller.rolling
-    val playerStarts: Player = controller.whichPlayerStarts
+    val playerStarts: Player = if (playerLostLastRound.name == null) controller.whichPlayerStarts else playerLostLastRound
     val playerFollows: Player = controller.whichPlayerFollows(playerStarts)
     var input = ""
 
     do {
       println(playerStarts.name + ", please declare your bid (e.g. 3,2 /means your bid is a double of 3):")
       input = readLine
-    } while (!controller.bidIsValid(input))
+    } while (!controller.bidIsValid(input, playerStarts))
     val bid = controller.newBid(input, playerStarts)
     var round = controller.newRound(bid)
     println("-- Highest bid at the moment = " + controller.getHighestBid(round).bidResult)
@@ -82,10 +83,12 @@ class Tui(controller: DPController) extends Observer {
 
       }
     }
-
+    playerLostLastRound = if (playerStarts.equals(roundWinner)) playerFollows else playerStarts
     println(roundWinner.name + " has won this round!")
     println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
   }
+
+  //TODO:def mistrusts:Unit = {}
 
   override def update(e: Event): Unit = {
     e match {
