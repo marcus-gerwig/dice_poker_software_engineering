@@ -38,7 +38,7 @@ class DPController(var table: PokerTable) extends Observable {
     winner
   }
 
-  def decrementLoserDiceCount(winner: Player)= table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound })
+  def decrementLoserDiceCount(winner: Player)= table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound }:+ winner)
 
   def gameIsOver: Boolean = {
     for (p <- table.players) {

@@ -10,7 +10,6 @@ import scala.compat.Platform.EOL
 import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util.DiceWereRollen
 import de.htwg.se.dicepoker.util.PlayerHasWon
-import de.htwg.se.dicepoker.util.PlayerHasLost
 
 class Tui(controller: DPController) extends Observer {
 
@@ -47,6 +46,7 @@ class Tui(controller: DPController) extends Observer {
         val winner = controller.whoWonTheGame
         winnerMessage(winner)
         exitMessage
+        continue = false
       }
       case "r" =>
     }
@@ -84,6 +84,7 @@ class Tui(controller: DPController) extends Observer {
     }
 
     println(roundWinner.name + " has won this round!")
+    println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
   }
 
   override def update(e: Event): Unit = {
