@@ -12,6 +12,7 @@ case class DiceCup(dieCombi: List[Int]) {
   def countTuples(): Map[Int, Int] = dieCombi.groupBy(l => l).map(t => (t._1, t._2.length))
   def cupHasTuples(tuples: Map[Int, Int]): Boolean = if (tuples.values.max > 1) true else false
 
+  def sortDiceCup = copy(dieCombi.sorted)
   override def toString = {
     var string = ""
     for (d <- dieCombi) {
