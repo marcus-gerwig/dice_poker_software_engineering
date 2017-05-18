@@ -43,6 +43,14 @@ class DPController(var table: PokerTable) extends Observable {
     return false
   }
 
+  def whoWonTheGame: Player = {
+    var winner = new Player()
+    for (p <- table.players) {
+      if (!p.hasLostGame) winner = p
+    }
+    winner
+  }
+
   def bidIsValid(input: String): Boolean = new Bid().inputIsValidBid(input)
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
 

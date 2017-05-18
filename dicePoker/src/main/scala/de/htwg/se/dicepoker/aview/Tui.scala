@@ -43,6 +43,9 @@ class Tui(controller: DPController) extends Observer {
       }
       case "s" => {
         while (!controller.gameIsOver) newRound
+        val winner = controller.whoWonTheGame
+        winnerMessage(winner)
+        exitMessage
       }
       case "r" =>
     }
@@ -52,6 +55,7 @@ class Tui(controller: DPController) extends Observer {
 
   def explainCommands: Unit = println("start game: 's' | exit game: 'q' | restart: 'r'")
   def exitMessage = println("The game is over. See you soon!")
+  def winnerMessage(winner: Player) = println("...and the winner is " + winner.name)
 
   def newRound: Unit = {
     controller.rolling
@@ -67,15 +71,18 @@ class Tui(controller: DPController) extends Observer {
     var round = controller.newRound(bid)
     println("-- Highest bid at the moment = " + controller.getHighestBid(round).bidResult)
     println("-- Now it's your turn " + playerFollows.name)
-    println("-- Do you mistrust "+playerStarts.name+" or do you want to set a higher bid?")
+    println("-- Do you mistrust " + playerStarts.name + " or do you want to set a higher bid?")
     println("mistrust: 'm' | setHigherBid: 'b')")
     val resp = readLine
+    var roundWinner: Player = null
     resp match {
-      case "m" =>
+      case "m" => roundWinner = controller.solveRound(round)
       case "b" => {
 
       }
     }
+
+    println(roundWinner.name + " has won this round!")
   }
 
   override def update(e: Event): Unit = {
