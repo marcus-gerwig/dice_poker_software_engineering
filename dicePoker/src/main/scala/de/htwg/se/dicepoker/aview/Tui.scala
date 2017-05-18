@@ -87,6 +87,7 @@ class Tui(controller: DPController) extends Observer {
   }
 
   def readLine = scala.io.StdIn.readLine()
+
   def startGame2P {
     println("Press 's' to start game with 2 Players")
     println("Enter name of Player 1:")

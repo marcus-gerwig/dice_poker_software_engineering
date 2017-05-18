@@ -29,7 +29,12 @@ class DPController(var table: PokerTable) extends Observable {
     }
     playerFollows
   }
-  //TODO: def solveRound: Player
+
+  def solveRound(round:Round): Player = {
+    val highestBidPlayer = round.highestBid.bidPlayer
+    val opponent = whichPlayerFollows(highestBidPlayer)
+    round.theRoundWins(opponent)
+  }
 
   def gameIsOver: Boolean = {
     for (p <- table.players) {
