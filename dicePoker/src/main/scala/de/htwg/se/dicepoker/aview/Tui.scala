@@ -14,7 +14,7 @@ import de.htwg.se.dicepoker.util.PlayerWithHighestBidLied
 import de.htwg.se.dicepoker.util.PlayerWithHighestBidNotLied
 
 class Tui(controller: DPController) extends Observer {
-
+  val tui = AppConst.tui_symbol_inFrontOfText
   var lastLoser: Player = null
   controller.add(this)
   controller.startGame(initPlayer(AppConst.number_of_player))
@@ -61,7 +61,7 @@ class Tui(controller: DPController) extends Observer {
     val playerStarts: Player = controller.whichPlayerStarts(lastLoser)
     val playerFollows: Player = controller.whichPlayerFollows(playerStarts)
     var input = ""
-
+    textNewRound
     do {
       textInsertBid(playerStarts)
       input = readLine
@@ -94,10 +94,11 @@ class Tui(controller: DPController) extends Observer {
   }
 
   def askPlayerIfMistrusts(round: Round, playerStarted: Player, playerFollows: Player): String = {
-    println("-- Highest bid at the moment = " + controller.getHighestBidResult(round))
-    println("-- Now it's your turn " + playerFollows.name)
-    println("-- Do you mistrust " + playerStarted.name + " or do you want to set a higher bid?")
-    println("-- mistrust: 'm' | setHigherBid: 'b'")
+    println()
+    println(tui + "Highest bid at the moment = " + controller.getHighestBidResult(round))
+    println(tui + "Now it's your turn " + playerFollows.name)
+    println(tui + "Do you mistrust " + playerStarted.name + " or do you want to set a higher bid?")
+    println(tui + "mistrust: 'm' | setHigherBid: 'b'")
     readLine
   }
 
@@ -107,35 +108,37 @@ class Tui(controller: DPController) extends Observer {
     var bid: Bid = null
     var newRound: Round = new Round()
     do {
-      println(playerRaises.name + ", please declare a higher bid than " + round.highestBid.bidResult + " :")
+      textPlayer(playerRaises)
+      println(tui + playerRaises.name + ", please declare a higher bid than " + round.highestBid.bidResult + " :")
       input = readLine
       if (controller.inputIsValid(input, playerRaises) && controller.newBidIsHigher(input, round)) {
         bid = controller.newBid(input, playerRaises)
         newRound = controller.raiseHighestBid(bid, round)
       }
-    } while (newRound == null)
+    } while (controller.getHighestBid(newRound) == null)
     newRound
   }
 
-
   def readLine = scala.io.StdIn.readLine()
-  def textInsertBid(player: Player) = println(player.name + ", please declare your bid (e.g. 3,2 /means your bid is a double of 3):")
-  def textExplainCommands: Unit = println("start game: 's' | exit game: 'q' | restart: 'r'")
-  def textExitMessage = println("The game is over. See you soon!");
+  def textInsertBid(player: Player) = println(tui + player.name + ", please declare your bid (e.g. 3,2 /means your bid is a double of 3):")
+  def textExplainCommands: Unit = println(tui + "start game: 's' | exit game: 'q' | restart: 'r'")
+  def textExitMessage = println(tui + "The game is over. See you soon!");
   def textPlayerWinsRound(winner: Player) = {
-    println(winner.name + " has won this round!")
+    println(tui + winner.name + " has won this round!")
     println("_________________________________________")
   }
-  def textWinnerMessage(winner: Player) = println("...and the winner is " + winner.name)
+  def textWinnerMessage(winner: Player) = println(tui + "...and the winner is " + winner.name+"!")
+  def textPlayer(player: Player) = println(controller.printPlayer(player))
+  def textNewRound = println(tui + "New Round")
 
   override def update(e: Event): Unit = {
     e match {
-      case DiceWereRollen => println(EOL + controller.table.toString())
-      case PlayerHasWon => println("Congratulations!")
-      case PlayerWithHighestBidLied => println(lastLoser.name + " lied. His actual result was " + controller.playerResult(lastLoser))
+      case DiceWereRollen => println(EOL + controller.printTable)
+      case PlayerHasWon => println(tui + "Congratulations!")
+      case PlayerWithHighestBidLied => println(tui + lastLoser.name + " lied. His actual result was " + controller.playerResult(lastLoser)+".")
       case PlayerWithHighestBidNotLied => {
         val winner = controller.whichPlayerFollows(lastLoser)
-        println(winner.name + " did not lie. His actual result was " + controller.playerResult(winner))
+        println(tui + winner.name + " did not lie. His actual result was " + controller.playerResult(winner)+".")
       }
     }
 
