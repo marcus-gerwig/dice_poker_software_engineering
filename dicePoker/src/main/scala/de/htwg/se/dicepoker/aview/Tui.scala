@@ -72,20 +72,7 @@ class Tui(controller: DPController) extends Observer {
     val bid = controller.newBid(input, playerStarts)
     var round = controller.newRound(bid)
     continue(round, playerStarts, playerFollows)
-    val resp = askPlayerIfTrusts(round, playerStarts, playerFollows)
-    resp match {
-      case "b" => null
-    }
-    while (resp.matches("b")) {
-      round = raiseBid(playerFollows, round)
-    }
-    var roundWinner: Player = null
-    resp match {
-      case "m" => roundWinner = controller.solveRound(round)
-    }
-    playerLostLastRound = if (playerStarts.equals(roundWinner)) playerFollows else playerStarts
-    println(roundWinner.name + " has won this round!")
-    println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+
   }
 
   def raiseBid(playerRaises: Player, round: Round): Round = {
@@ -125,6 +112,7 @@ class Tui(controller: DPController) extends Observer {
       case "m" => {
         roundWinner = controller.solveRound(round)
         playerLostLastRound = if (playerStarted.equals(roundWinner)) playerFollowed else playerStarted
+        println(playerLostLastRound.name + " lied. His actual result is "+playerLostLastRound.diceCup.getMaxResult())
         println(roundWinner.name + " has won this round!")
         println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
       }
