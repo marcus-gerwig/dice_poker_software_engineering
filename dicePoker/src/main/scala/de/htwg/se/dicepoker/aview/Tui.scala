@@ -15,14 +15,14 @@ import de.htwg.se.dicepoker.util.PlayerWithHighestBidNotLied
 
 class Tui(controller: DPController) extends Observer {
 
-  var lastLoser: Player = new Player(null)
+  var lastLoser: Player = null
   controller.add(this)
   controller.startGame(initPlayer(AppConst.number_of_player))
   textExplainCommands
 
   def initPlayer(number: Int) = {
     var players: Vector[Player] = Vector.empty
-    println("Welcome to Dice Poker!")
+    println("Welcome to €€ DICE POKER €€!")
     for (i <- 1 to number) {
       println("Hello Player " + i)
       println("Please enter your name:")
