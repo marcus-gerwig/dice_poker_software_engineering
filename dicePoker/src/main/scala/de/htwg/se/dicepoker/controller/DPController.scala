@@ -5,6 +5,8 @@ import de.htwg.se.dicepoker.util.Observable
 import de.htwg.se.dicepoker.model.Round
 import de.htwg.se.dicepoker.util.DiceWereRollen
 import de.htwg.se.dicepoker.util.PlayerHasWon
+import de.htwg.se.dicepoker.util.PlayerWithHighestBidLied
+import de.htwg.se.dicepoker.util.PlayerWithHighestBidNotLied
 
 class DPController(var table: PokerTable) extends Observable {
 
@@ -37,7 +39,8 @@ class DPController(var table: PokerTable) extends Observable {
     decrementLoserDiceCount(winner)
     winner
   }
-
+  def playerLied:Unit = notifyObservers(PlayerWithHighestBidLied)
+  def playerDidNotLie = notifyObservers(PlayerWithHighestBidNotLied)
   def decrementLoserDiceCount(winner: Player) = table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound } :+ winner)
 
   def gameIsOver: Boolean = {
@@ -56,11 +59,7 @@ class DPController(var table: PokerTable) extends Observable {
     winner
   }
 
-  def playerLostRound(roundWinner: Player): Unit = {
-
-  }
-
   def bidIsValid(input: String, player: Player): Boolean = new Bid().inputIsValidBid(input, player)
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
-
+  def playerResult(player:Player) = player.diceCup.getMaxResult()
 }

@@ -10,6 +10,8 @@ import scala.compat.Platform.EOL
 import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util.DiceWereRollen
 import de.htwg.se.dicepoker.util.PlayerHasWon
+import de.htwg.se.dicepoker.util.PlayerWithHighestBidLied
+import de.htwg.se.dicepoker.util.PlayerWithHighestBidNotLied
 
 class Tui(controller: DPController) extends Observer {
 
@@ -104,7 +106,7 @@ class Tui(controller: DPController) extends Observer {
     var roundCopy = round
     var roundWinner: Player = null
     resp match {
-      case "b" =>  {
+      case "b" => {
         roundCopy = raiseBid(playerFollowed, round)
         continue(roundCopy, playerFollowed, playerStarted)
 
@@ -112,8 +114,9 @@ class Tui(controller: DPController) extends Observer {
       case "m" => {
         roundWinner = controller.solveRound(round)
         playerLostLastRound = if (playerStarted.equals(roundWinner)) playerFollowed else playerStarted
-        println(playerLostLastRound.name + " lied. His actual result is "+playerLostLastRound.diceCup.getMaxResult())
-        println(roundWinner.name + " has won this round!")
+        if (playerLostLastRound.equals(round.highestBid.bidPlayer)) controller.playerLied
+        else
+          println(roundWinner.name + " has won this round!")
         println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
       }
     }
@@ -124,76 +127,15 @@ class Tui(controller: DPController) extends Observer {
     e match {
       case DiceWereRollen => println(EOL + controller.table.toString())
       case PlayerHasWon => println("Congratulations!")
+      case PlayerWithHighestBidLied => println(playerLostLastRound.name + " lied. His actual result was " + controller.playerResult(playerLostLastRound))
+      case PlayerWithHighestBidNotLied => {
+        val winner = controller.whichPlayerFollows(playerLostLastRound)
+        println(winner.name + " did not lie. His actual result was " + controller.playerResult(winner))
+      }
     }
 
   }
 
   def readLine = scala.io.StdIn.readLine()
-
-  def startGame2P {
-    println("Press 's' to start game with 2 Players")
-    println("Enter name of Player 1:")
-    val player1 = new Player("Marcus", null, 5, null)
-    println("Enter name of Player 2:")
-    val player2 = new Player("Andy", null, 5, null)
-
-    val playerlist: Vector[Player] = Vector(player1, player2)
-
-    val table = new PokerTable(playerlist)
-
-    println("A 2 Player game was started!")
-
-    var diceCupP1 = new DiceCup
-
-    diceCupP1 = diceCupP1.roll(player1.diceCount)
-
-    var diceCupP2 = new DiceCup
-
-    diceCupP2 = diceCupP2.roll(player2.diceCount)
-
-    val round = new Round(null)
-
-    while (!player1.hasLostGame || !player2.hasLostGame) {
-
-      println("Player 1 has thrown" + player1.diceCount + " Dice")
-      println("Player 1 has thrown this values: " + diceCupP1.dieCombi)
-      println("Player 1s highest result: " + diceCupP1.getMaxResult(diceCupP1.countTuples(diceCupP1.dieCombi)))
-
-      println("Player 1 please insert your bid (e.g. 2,1): ")
-
-      println("Change Player")
-      println("The bid of Player 1 is: ")
-
-      round.setHighestBid(null)
-
-      println("Player 2: If you don't trust press 's' if you want to enter a higher Bid press 'b'")
-      println("Player 2 has thrown" + player2.diceCount + " Dice")
-      println("Player 2 has thrown this values: " + diceCupP2.dieCombi)
-      println("Player 2s highest result: " + diceCupP2.getMaxResult(diceCupP2.countTuples(diceCupP2.dieCombi)))
-
-      println("Player 2 please insert your bid (e.g. 2,1): ")
-
-      println("Change Player")
-      println("The bid of Player 2 is: ")
-
-      round.setHighestBid(null)
-
-      println("Player 1: If you don't trust press 's' if you want to enter a higher Bid press 'b'")
-
-    }
-
-    if (player1.hasLostGame) {
-
-      println("Player 2 has won the game")
-
-    }
-
-    if (player2.hasLostGame) {
-
-      println("Player 1 has won the game")
-
-    }
-
-  }
 
 }

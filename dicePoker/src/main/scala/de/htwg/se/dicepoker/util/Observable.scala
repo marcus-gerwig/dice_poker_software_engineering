@@ -7,6 +7,8 @@ trait Observer {
 abstract class Event
 object DiceWereRollen extends Event
 object PlayerHasWon extends Event
+object PlayerWithHighestBidLied extends Event
+object PlayerWithHighestBidNotLied extends Event
 
 class Observable {
   var subscribers: Vector[Observer] = Vector()
