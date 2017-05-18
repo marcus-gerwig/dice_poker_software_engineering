@@ -19,7 +19,7 @@ class DPController(var table: PokerTable) extends Observable {
 
   def newPlayer(name: String): Player = new Player(name)
   def newRound(highestBid: Bid): Round = new Round(highestBid)
-  def raiseHighestBid(bid: Bid, round: Round): Round = round.setHighestBid(bid)
+  def raiseHighestBid(bid: Bid, round: Round): Round = if (round.highestBid.bidResult.isHigherThan(bid.bidResult)) round.setHighestBid(bid); else null;
   def getHighestBid(round: Round) = round.highestBid
   def whichPlayerStarts: Player = table.players(scala.util.Random.nextInt(table.players.length))
   def whichPlayerFollows(startingPlayer: Player): Player = {
@@ -38,7 +38,7 @@ class DPController(var table: PokerTable) extends Observable {
     winner
   }
 
-  def decrementLoserDiceCount(winner: Player)= table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound }:+ winner)
+  def decrementLoserDiceCount(winner: Player) = table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound } :+ winner)
 
   def gameIsOver: Boolean = {
     for (p <- table.players) {
@@ -60,7 +60,7 @@ class DPController(var table: PokerTable) extends Observable {
 
   }
 
-  def bidIsValid(input: String, player:Player): Boolean = new Bid().inputIsValidBid(input, player)
+  def bidIsValid(input: String, player: Player): Boolean = new Bid().inputIsValidBid(input, player)
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
 
 }

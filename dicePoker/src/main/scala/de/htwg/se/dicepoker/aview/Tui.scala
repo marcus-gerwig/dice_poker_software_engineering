@@ -71,24 +71,66 @@ class Tui(controller: DPController) extends Observer {
     } while (!controller.bidIsValid(input, playerStarts))
     val bid = controller.newBid(input, playerStarts)
     var round = controller.newRound(bid)
-    println("-- Highest bid at the moment = " + controller.getHighestBid(round).bidResult)
-    println("-- Now it's your turn " + playerFollows.name)
-    println("-- Do you mistrust " + playerStarts.name + " or do you want to set a higher bid?")
-    println("-- mistrust: 'm' | setHigherBid: 'b'")
-    val resp = readLine
+    continue(round, playerStarts, playerFollows)
+    val resp = askPlayerIfTrusts(round, playerStarts, playerFollows)
+    resp match {
+      case "b" => null
+    }
+    while (resp.matches("b")) {
+      round = raiseBid(playerFollows, round)
+    }
     var roundWinner: Player = null
     resp match {
       case "m" => roundWinner = controller.solveRound(round)
-      case "b" => {
-
-      }
     }
     playerLostLastRound = if (playerStarts.equals(roundWinner)) playerFollows else playerStarts
     println(roundWinner.name + " has won this round!")
     println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
   }
 
-  //TODO:def mistrusts:Unit = {}
+  def raiseBid(playerRaises: Player, round: Round): Round = {
+    println("->->->->->->->->->->->->")
+    var input = ""
+    var bid: Bid = null
+    var newRound: Round = new Round()
+    do {
+      println(playerRaises.name + ", please declare a higher bid than " + round.highestBid.bidResult + " :")
+      input = readLine
+      if (controller.bidIsValid(input, playerRaises)) {
+        bid = controller.newBid(input, playerRaises)
+        newRound = controller.raiseHighestBid(bid, round)
+      }
+    } while (newRound == null)
+    newRound
+  }
+
+  def askPlayerIfTrusts(round: Round, playerStarted: Player, playerFollows: Player): String = {
+    println("-- Highest bid at the moment = " + controller.getHighestBid(round).bidResult)
+    println("-- Now it's your turn " + playerFollows.name)
+    println("-- Do you mistrust " + playerStarted.name + " or do you want to set a higher bid?")
+    println("-- mistrust: 'm' | setHigherBid: 'b'")
+    readLine
+  }
+
+  def continue(round: Round, playerStarted: Player, playerFollowed: Player): Unit = {
+    val resp = askPlayerIfTrusts(round, playerStarted, playerFollowed)
+    var roundCopy = round
+    var roundWinner: Player = null
+    resp match {
+      case "b" =>  {
+        roundCopy = raiseBid(playerFollowed, round)
+        continue(roundCopy, playerFollowed, playerStarted)
+
+      }
+      case "m" => {
+        roundWinner = controller.solveRound(round)
+        playerLostLastRound = if (playerStarted.equals(roundWinner)) playerFollowed else playerStarted
+        println(roundWinner.name + " has won this round!")
+        println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+      }
+    }
+
+  }
 
   override def update(e: Event): Unit = {
     e match {
