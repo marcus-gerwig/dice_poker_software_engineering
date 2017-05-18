@@ -10,6 +10,7 @@ import scala.compat.Platform.EOL
 import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util.DiceWereRollen
 import de.htwg.se.dicepoker.util.PlayerHasWon
+import de.htwg.se.dicepoker.util.PlayerHasLost
 
 class Tui(controller: DPController) extends Observer {
 
@@ -59,8 +60,8 @@ class Tui(controller: DPController) extends Observer {
 
   def newRound: Unit = {
     controller.rolling
-    val playerStarts = controller.whichPlayerStarts
-    val playerFollows = controller.whichPlayerFollows(playerStarts)
+    val playerStarts: Player = controller.whichPlayerStarts
+    val playerFollows: Player = controller.whichPlayerFollows(playerStarts)
     var input = ""
 
     do {
@@ -72,7 +73,7 @@ class Tui(controller: DPController) extends Observer {
     println("-- Highest bid at the moment = " + controller.getHighestBid(round).bidResult)
     println("-- Now it's your turn " + playerFollows.name)
     println("-- Do you mistrust " + playerStarts.name + " or do you want to set a higher bid?")
-    println("mistrust: 'm' | setHigherBid: 'b')")
+    println("-- mistrust: 'm' | setHigherBid: 'b'")
     val resp = readLine
     var roundWinner: Player = null
     resp match {

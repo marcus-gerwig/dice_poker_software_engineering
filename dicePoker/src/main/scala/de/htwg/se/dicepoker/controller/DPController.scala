@@ -14,7 +14,7 @@ class DPController(var table: PokerTable) extends Observable {
 
   def rolling: Unit = {
     table = table.rollTheDice
-    notifyObservers(PlayerHasWon)
+    notifyObservers(DiceWereRollen)
   }
 
   def newPlayer(name: String): Player = new Player(name)
@@ -30,11 +30,15 @@ class DPController(var table: PokerTable) extends Observable {
     playerFollows
   }
 
-  def solveRound(round:Round): Player = {
+  def solveRound(round: Round): Player = {
     val highestBidPlayer = round.highestBid.bidPlayer
     val opponent = whichPlayerFollows(highestBidPlayer)
-    round.theRoundWins(opponent)
+    val winner = round.theRoundWins(opponent)
+    decrementLoserDiceCount(winner)
+    winner
   }
+
+  def decrementLoserDiceCount(winner: Player)= table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound })
 
   def gameIsOver: Boolean = {
     for (p <- table.players) {
@@ -48,7 +52,12 @@ class DPController(var table: PokerTable) extends Observable {
     for (p <- table.players) {
       if (!p.hasLostGame) winner = p
     }
+    notifyObservers(PlayerHasWon)
     winner
+  }
+
+  def playerLostRound(roundWinner: Player): Unit = {
+
   }
 
   def bidIsValid(input: String): Boolean = new Bid().inputIsValidBid(input)
