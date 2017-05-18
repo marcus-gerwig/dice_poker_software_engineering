@@ -9,7 +9,7 @@ case class PokerTable(players: Vector[Player]) {
     var newPlayers: Vector[Player] = Vector()
     for (p <- players) {
       val newDiceCup = p.diceCup.roll(p.diceCount).sortDiceCup
-      val newPlayer = p.copy(p.name, p.playerResult, p.diceCount, newDiceCup)
+      val newPlayer = p.copy(p.name, p.diceCount, newDiceCup)
       newPlayers = newPlayers :+ newPlayer
     }
     copy(newPlayers)
