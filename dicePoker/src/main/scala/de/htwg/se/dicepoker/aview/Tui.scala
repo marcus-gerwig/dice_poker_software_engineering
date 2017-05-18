@@ -65,7 +65,7 @@ class Tui(controller: DPController) extends Observer {
     do {
       textInsertBid(playerStarts)
       input = readLine
-    } while (!controller.bidIsValid(input, playerStarts))
+    } while (!controller.inputIsValid(input, playerStarts))
     val bid = controller.newBid(input, playerStarts)
     var round = controller.newRound(bid)
     continue(round, playerStarts, playerFollows)
@@ -109,7 +109,7 @@ class Tui(controller: DPController) extends Observer {
     do {
       println(playerRaises.name + ", please declare a higher bid than " + round.highestBid.bidResult + " :")
       input = readLine
-      if (controller.bidIsValid(input, playerRaises)) {
+      if (controller.inputIsValid(input, playerRaises) && controller.newBidIsHigher(input, round)) {
         bid = controller.newBid(input, playerRaises)
         newRound = controller.raiseHighestBid(bid, round)
       }

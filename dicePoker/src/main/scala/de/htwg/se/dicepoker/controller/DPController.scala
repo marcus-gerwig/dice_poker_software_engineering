@@ -26,7 +26,7 @@ class DPController(var table: PokerTable) extends Observable {
   def getHighestBidResult(round: Round) = getHighestBid(round).bidResult
   def getHighestBidPlayer(round: Round) = getHighestBid(round).bidPlayer
 
-  def whichPlayerStarts(loserLastRound: Player): Player = if(loserLastRound==null) table.players(scala.util.Random.nextInt(table.players.length)) else loserLastRound
+  def whichPlayerStarts(loserLastRound: Player): Player = if (loserLastRound == null) table.players(scala.util.Random.nextInt(table.players.length)) else loserLastRound
 
   def whichPlayerFollows(startingPlayer: Player): Player = {
     var playerFollows = new Player(null)
@@ -43,7 +43,7 @@ class DPController(var table: PokerTable) extends Observable {
     decrementLoserDiceCount(winner)
     winner
   }
-  def playerLied:Unit = notifyObservers(PlayerWithHighestBidLied)
+  def playerLied: Unit = notifyObservers(PlayerWithHighestBidLied)
   def playerDidNotLie = notifyObservers(PlayerWithHighestBidNotLied)
   def decrementLoserDiceCount(winner: Player) = table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound } :+ winner)
 
@@ -63,7 +63,8 @@ class DPController(var table: PokerTable) extends Observable {
     winner
   }
 
-  def bidIsValid(input: String, player: Player): Boolean = new Bid().inputIsValidBid(input, player)
+  def inputIsValid(input: String, player: Player): Boolean = new Bid().inputIsValidBid(input, player)
+  def newBidIsHigher(input: String, round: Round): Boolean = if (newBid(input,null).bidResult.isHigherThan(round.highestBid.bidResult)) true else false
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
-  def playerResult(player:Player) = player.diceCup.getMaxResult()
+  def playerResult(player: Player) = player.diceCup.getMaxResult()
 }
