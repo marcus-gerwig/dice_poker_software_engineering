@@ -127,7 +127,7 @@ class Tui(controller: DPController) extends Observer {
     println(tui + winner.name + " has won this round!")
     println("_________________________________________")
   }
-  def textWinnerMessage(winner: Player) = println(tui + "...and the winner is " + winner.name+"!")
+  def textWinnerMessage(winner: Player) = println(tui + "...and the winner is " + winner.name + "!")
   def textPlayer(player: Player) = println(controller.printPlayer(player))
   def textNewRound = println(tui + "New Round")
 
@@ -135,10 +135,10 @@ class Tui(controller: DPController) extends Observer {
     e match {
       case DiceWereRollen => println(EOL + controller.printTable)
       case PlayerHasWon => println(tui + "Congratulations!")
-      case PlayerWithHighestBidLied => println(tui + lastLoser.name + " lied. His actual result was " + controller.playerResult(lastLoser)+".")
+      case PlayerWithHighestBidLied => println(tui + lastLoser.name + " lied. His actual result was " + controller.playerResult(lastLoser) + ".")
       case PlayerWithHighestBidNotLied => {
         val winner = controller.whichPlayerFollows(lastLoser)
-        println(tui + winner.name + " did not lie. His actual result was " + controller.playerResult(winner)+".")
+        println(tui + winner.name + " did not lie. His actual result was " + controller.playerResult(winner) + ".")
       }
     }
 

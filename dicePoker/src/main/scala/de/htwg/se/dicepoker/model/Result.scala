@@ -13,7 +13,7 @@ case class Result(dieValue: Int, frequency: Int) {
 
   def isHigherThan(otherResult: Result) = {
     if (this.dieValue > otherResult.dieValue) true
-    else if(this.dieValue <= otherResult.dieValue && this.frequency > otherResult.frequency) true
+    else if (this.dieValue <= otherResult.dieValue && this.frequency > otherResult.frequency) true
     else false
   }
 
