@@ -31,17 +31,17 @@ class DiceCupSpec extends WordSpec with Matchers {
     }
 
     "have a highest result due to the quantity and the strength of a die value" in {
-      var map = Map(1 -> 2, 3 -> 1, 4 -> 1, 5 -> 1)
-      rolledCup.getMaxResult(map) should be(Result(1, 2))
+      var cup1 = new DiceCup(List(1,1,3,4,5))
+      cup1.getMaxResult() should be(Result(1, 2))
 
-      map = Map(1 -> 2, 3 -> 1, 5 -> 2)
-      rolledCup.getMaxResult(map) should be(Result(5, 2))
+      cup1 = new DiceCup(List(1,1,3,5,5))
+      cup1.getMaxResult() should be(Result(5, 2))
 
-      map = Map(1 -> 3, 3 -> 1, 5 -> 2)
-      rolledCup.getMaxResult(map) should be(Result(1, 3))
+      cup1 = new DiceCup(List(1,1,1,3,5,5))
+      cup1.getMaxResult() should be(Result(1, 3))
 
-      map = Map(1 -> 1, 3 -> 1, 4 -> 1, 5 -> 1, 6 -> 1)
-      rolledCup.getMaxResult(map) should be(Result(6, 1))
+      cup1 = new DiceCup(List(1,3,4,5,6))
+      cup1.getMaxResult() should be(Result(6, 1))
     }
   }
 
