@@ -24,6 +24,7 @@ import de.htwg.se.dicepoker.util.GameWasCancelled
 import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.EnterPlayerName
 import de.htwg.se.dicepoker.util.LetShowBegin
+import de.htwg.se.dicepoker.util.LineSeparator
 
 class Tui(controller: DPController) extends Observer {
   val tui = AppConst.tui_symbol_inFrontOfText
@@ -60,6 +61,7 @@ class Tui(controller: DPController) extends Observer {
       }
       case NewRound => println(tui + "New Round")
       case DeclareFirstBid => println(tui + controller.playerName(controller.getPlayerStarted) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):")
+      case LineSeparator => println("->->->->->->->->->->->->")
       case Input => {
         val input = readLine
         controller.setUserInteraction(input)

@@ -21,6 +21,7 @@ object PlayerWithHighestBidLied extends Event
 object PlayerWithHighestBidNotLied extends Event
 object NewRound extends Event
 object DeclareFirstBid extends Event
+object LineSeparator extends Event
 object Input extends Event
 object AskIfMistrusts extends Event
 object PrintPlayer extends Event with Attach

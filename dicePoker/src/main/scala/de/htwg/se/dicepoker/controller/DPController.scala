@@ -19,6 +19,7 @@ import de.htwg.se.dicepoker.util.LetShowBegin
 import de.htwg.se.dicepoker.util.GameWasCancelled
 import de.htwg.se.dicepoker.util.GameIsOver
 import de.htwg.se.dicepoker.util.WelcomeMsg
+import de.htwg.se.dicepoker.util.LineSeparator
 
 class DPController(var table: PokerTable) extends Observable {
 
@@ -31,7 +32,6 @@ class DPController(var table: PokerTable) extends Observable {
   def createPlayers: Unit = {
     notifyObservers(WelcomeMsg)
     table = new PokerTable(initPlayer)
-
   }
 
   def initPlayer = {
@@ -104,9 +104,10 @@ class DPController(var table: PokerTable) extends Observable {
   }
 
   def raiseBid(playerRaises: Player): Round = {
-    println("->->->->->->->->->->->->")
+    notifyObservers(LineSeparator)
     var bid: Bid = null
     var newRound: Round = new Round()
+    var inputCorrect = false
     do {
       PrintPlayer.set(playerRaises)
       notifyObservers(PrintPlayer)
@@ -114,39 +115,23 @@ class DPController(var table: PokerTable) extends Observable {
       notifyObservers(RequestHigherBid)
       notifyObservers(Input)
       if (inputIsValid(lastUserInteraction, playerRaises) && newBidIsHigher(lastUserInteraction)) {
+        inputCorrect = true
         bid = newBid(lastUserInteraction, playerRaises)
         newRound = raiseHighestBid(bid)
       }
-    } while (getHighestBid(newRound) == null)
+    } while (inputCorrect == false)
     newRound
   }
 
   def newPlayer(name: String): Player = new Player(name)
   def newRound(highestBid: Bid): Round = new Round(highestBid)
-  //obs
-  def raiseHighestBid(bid: Bid, round: Round): Round = if (bid.bidResult.isHigherThan(round.highestBid.bidResult)) round.setHighestBid(bid); else null;
-  def raiseHighestBid(bid: Bid): Round = if (bid.bidResult.isHigherThan(currentRound.highestBid.bidResult)) currentRound.setHighestBid(bid); else null;
-  //obs
-  def getHighestBid(round: Round) = round.highestBid
-  //obs
-  def getHighestBidResult(round: Round) = getHighestBid(round).bidResult
+  def raiseHighestBid(bid: Bid): Round = currentRound.setHighestBid(bid)
+
   def getHighestBidResult = currentRound.highestBid.bidResult
-  //obs
-  def getHighestBidPlayer(round: Round) = getHighestBid(round).bidPlayer
-  def getHighestBidPlayer: Player = getHighestBid(currentRound).bidPlayer
+  def getHighestBidPlayer: Player = currentRound.highestBid.bidPlayer
 
-  def whichPlayerStarts(loserLastRound: Player): Player = if (loserLastRound == null) table.players(scala.util.Random.nextInt(table.players.length)) else loserByName(loserLastRound)
-  def whichPlayerStarts: Player = if (lastLoser == null) table.players(scala.util.Random.nextInt(table.players.length)) else loserByName(lastLoser)
-  def loserByName(loserLastRound: Player): Player = table.getPlayerByName(loserLastRound.name)
-
+  def whichPlayerStarts: Player = if (lastLoser == null) table.players(scala.util.Random.nextInt(table.players.length)) else lastLoser
   def whichPlayerFollows(startingPlayer: Player): Player = table.players.filter { p => !p.eq(startingPlayer) }.head
-  /*def whichPlayerFollows(startingPlayer: Player): Player = {
-    var playerFollows = new Player(null)
-    for (p <- table.players) {
-      if (!startingPlayer.equals(p)) playerFollows = p
-    }
-    playerFollows
-  }*/
 
   def solveRound: Player = {
     val highestBidPlayer = currentRound.highestBid.bidPlayer
@@ -155,27 +140,26 @@ class DPController(var table: PokerTable) extends Observable {
     decrementLoserDiceCount(winner)
     winner
   }
+  def gameIsOver: Boolean = table.players.exists { p => p.hasLostGame }
+  def whoWonTheGame: Player = table.players.filterNot { p => p.hasLostGame }.head
   def playerLied: Unit = notifyObservers(PlayerWithHighestBidLied)
   def playerDidNotLie = notifyObservers(PlayerWithHighestBidNotLied)
   def decrementLoserDiceCount(winner: Player) = table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound } :+ winner)
 
-  def gameIsOver: Boolean = table.players.exists { p => p.hasLostGame }
-  def whoWonTheGame: Player = table.players.filterNot { p => p.hasLostGame }.head
   def inputIsValid(input: String, player: Player): Boolean = new Bid().inputIsValidBid(input, player)
-
   def newBidIsHigher(input: String): Boolean = if (newBid(input, null).bidResult.isHigherThan(currentRound.highestBid.bidResult)) true else false
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
-  def playerResult(player: Player) = player.diceCup.getMaxResult()
-  def getPlayerStarted: Player = playerStarted
-  def playerName(player: Player) = player.name
 
   def setUserInteraction(input: String): Unit = {
     lastUserInteraction = input
     stopGameWanted
   }
+
   def printTable = table.toString()
   def printPlayer(player: Player) = player.toString()
   def getLastLoser = lastLoser
-
+  def playerName(player: Player) = player.name
+  def playerResult(player: Player) = player.diceCup.getMaxResult()
+  def getPlayerStarted: Player = playerStarted
   def stopGameWanted: Unit = if (lastUserInteraction == "Q") { notifyObservers(GameWasCancelled); System.exit(0) }
 }
