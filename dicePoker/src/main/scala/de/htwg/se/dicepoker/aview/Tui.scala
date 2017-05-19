@@ -18,7 +18,7 @@ class Tui(controller: DPController) extends Observer {
   var lastLoser: Player = null
   controller.add(this)
   controller.startGame(initPlayer(AppConst.number_of_player))
-  textExplainCommands
+  println(textExplainCommands)
 
   def initPlayer(number: Int) = {
     var players: Vector[Player] = Vector.empty
@@ -40,14 +40,14 @@ class Tui(controller: DPController) extends Observer {
     val input = readLine
     input match {
       case "q" => {
-        textExitMessage
+        println(textExitMessage)
         continue = false
       }
       case "s" => {
         while (!controller.gameIsOver) newRound
         val winner = controller.whoWonTheGame
-        textWinnerMessage(winner)
-        textExitMessage
+        println(textWinnerMessage(winner))
+        println(textExitMessage)
         continue = false
       }
       case "r" => continue = false
@@ -61,9 +61,9 @@ class Tui(controller: DPController) extends Observer {
     val playerStarts: Player = controller.whichPlayerStarts(lastLoser)
     val playerFollows: Player = controller.whichPlayerFollows(playerStarts)
     var input = ""
-    textNewRound
+    println(textNewRound)
     do {
-      textInsertBid(playerStarts)
+      println(textInsertBid(playerStarts))
       input = readLine
     } while (!controller.inputIsValid(input, playerStarts))
     val bid = controller.newBid(input, playerStarts)
@@ -87,7 +87,7 @@ class Tui(controller: DPController) extends Observer {
         lastLoser = if (playerStarted.equals(roundWinner)) playerFollowed else playerStarted
         if (lastLoser.equals(controller.getHighestBidPlayer(roundCopy))) controller.playerLied
         else controller.playerDidNotLie
-        textPlayerWinsRound(roundWinner)
+        println(textPlayerWinsRound(roundWinner))
       }
     }
 
@@ -108,7 +108,7 @@ class Tui(controller: DPController) extends Observer {
     var bid: Bid = null
     var newRound: Round = new Round()
     do {
-      textPlayer(playerRaises)
+      println(textPlayer(playerRaises))
       println(tui + playerRaises.name + ", please declare a higher bid than " + round.highestBid.bidResult + " :")
       input = readLine
       if (controller.inputIsValid(input, playerRaises) && controller.newBidIsHigher(input, round)) {
@@ -120,16 +120,13 @@ class Tui(controller: DPController) extends Observer {
   }
 
   def readLine = scala.io.StdIn.readLine()
-  def textInsertBid(player: Player) = println(tui + player.name + ", please declare your bid (e.g. 3,2 /means your bid is a double of 3):")
-  def textExplainCommands: Unit = println(tui + "start game: 's' | exit game: 'q' | restart: 'r'")
-  def textExitMessage = println(tui + "The game is over. See you soon!");
-  def textPlayerWinsRound(winner: Player) = {
-    println(tui + winner.name + " has won this round!")
-    println("_________________________________________")
-  }
-  def textWinnerMessage(winner: Player) = println(tui + "...and the winner is " + winner.name + "!")
-  def textPlayer(player: Player) = println(controller.printPlayer(player))
-  def textNewRound = println(tui + "New Round")
+  def textInsertBid(player: Player): String = tui + player.name + ", please declare your bid (e.g. 3,2 /means your bid is a double of 3):"
+  def textExplainCommands: String = tui + "start game: 's' | exit game: 'q' | restart: 'r'"
+  def textExitMessage: String = tui + "The game is over. See you soon!"
+  def textPlayerWinsRound(winner: Player): String = tui + winner.name + " has won this round!" + EOL + "_________________________________________"
+  def textWinnerMessage(winner: Player): String = tui + "...and the winner is " + winner.name + "!"
+  def textPlayer(player: Player): String = controller.printPlayer(player)
+  def textNewRound: String = tui + "New Round"
 
   override def update(e: Event): Unit = {
     e match {
