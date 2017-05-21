@@ -40,24 +40,4 @@ case class DiceCup(dieCombi: List[Int]) {
 
   }
 
-  //Approximately not used, initially developed for test purpose
-  def countTuples(list: List[Int]): Map[Int, Int] = list.groupBy(l => l).map(t => (t._1, t._2.length))
-  def getMaxResult(tuples: Map[Int, Int]): Result = {
-    var maxFrequency: Int = 0
-    val highDie = tuples.keys.max
-    if (cupHasTuples(tuples)) {
-      var key = tuples.head._1
-      var value = tuples.head._2
-
-      for ((x, y) <- tuples) {
-        if ((y >= value && x > key) || (y > value)) {
-          value = y
-          key = x
-        }
-      }
-      Result(key, value)
-    } else Result(highDie, 1)
-
-  }
-
 }
