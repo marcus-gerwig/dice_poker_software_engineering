@@ -131,7 +131,7 @@ class DPController(var table: PokerTable) extends Observable {
   def getHighestBidPlayer: Player = currentRound.highestBid.bidPlayer
 
   def whichPlayerStarts: Player = if (lastLoser == null) table.players(scala.util.Random.nextInt(table.players.length)) else lastLoser
-  def whichPlayerFollows(startingPlayer: Player): Player = table.players.filter { p => !p.eq(startingPlayer) }.head
+  def whichPlayerFollows(startingPlayer: Player): Player = table.players.filter { p => !p.equals(startingPlayer) }(0)
 
   def solveRound: Player = {
     val highestBidPlayer = currentRound.highestBid.bidPlayer
