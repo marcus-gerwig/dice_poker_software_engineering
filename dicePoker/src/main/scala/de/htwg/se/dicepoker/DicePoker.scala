@@ -10,10 +10,8 @@ object DicePoker {
   val tui = new Tui(controller)
 
   def main(args: Array[String]): Unit = {
-    var continue: Boolean = true
-    do {
-      continue = tui.processInputLine()
-    } while (continue)
+
+    tui.processInputLine()
 
   }
 }
