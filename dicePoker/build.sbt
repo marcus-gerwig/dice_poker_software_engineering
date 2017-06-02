@@ -15,6 +15,7 @@ libraryDependencies ++= {
   )
 }
 
+libraryDependencies += "org.scala-lang" % "scala-swing" % "2.11.0-M7"
 
 fork in run := true
 
