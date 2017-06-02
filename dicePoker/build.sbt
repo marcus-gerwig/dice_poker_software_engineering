@@ -13,7 +13,9 @@ libraryDependencies ++= {
     "org.scalatest" %% "scalatest"                   % scalaTestV       % "test",
     "org.scalamock" %% "scalamock-scalatest-support" % scalaMockV       % "test"
   )
+  
 }
+libraryDependencies += "org.scala-lang" % "scala-swing" % "2.10.4"
 
 
 fork in run := true
