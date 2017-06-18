@@ -33,6 +33,8 @@ class DPController(var table: PokerTable) extends Observable {
     notifyObservers(WelcomeMsg)
     table = new PokerTable(initPlayer)
   }
+  
+  
 
   def initPlayer = {
     var players: Vector[Player] = Vector.empty
@@ -69,6 +71,7 @@ class DPController(var table: PokerTable) extends Observable {
     table = table.rollTheDice
     notifyObservers(DiceWereRollen)
   }
+  
 
   def newRound: Unit = {
     rolling
@@ -162,4 +165,21 @@ class DPController(var table: PokerTable) extends Observable {
   def playerResult(player: Player) = player.diceCup.getMaxResult()
   def getPlayerStarted: Player = playerStarted
   def stopGameWanted: Unit = if (lastUserInteraction == "Q") { notifyObservers(GameWasCancelled); System.exit(0) }
+  
+  
+  //methods added from Andreas Graule
+  
+   def createPlayers (players: Vector[Player]) = {
+    
+    table = new PokerTable(players)
+  }
+   
+  def newRoundGUI: Unit = {
+    rolling
+    playerStarted = whichPlayerStarts
+    playerFollowed = whichPlayerFollows(playerStarted)
+  }
+  
+  def getPlayerFollowed: Player = playerFollowed
 }
+
