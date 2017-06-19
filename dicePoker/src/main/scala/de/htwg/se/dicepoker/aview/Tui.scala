@@ -1,7 +1,7 @@
 package de.htwg.se.dicepoker.aview
 
 import de.htwg.se.dicepoker.controller.DPController
-import de.htwg.se.dicepoker.model.impl.{ _ }
+import de.htwg.se.dicepoker.model.tableComponent._
 
 import de.htwg.se.dicepoker.util.Observer
 import de.htwg.se.dicepoker.util.AppConst
@@ -25,6 +25,7 @@ import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.EnterPlayerName
 import de.htwg.se.dicepoker.util.LetShowBegin
 import de.htwg.se.dicepoker.util.LineSeparator
+import de.htwg.se.dicepoker.model.playerComponent.Player
 
 class Tui(controller: DPController) extends Observer {
   val tui = AppConst.tui_symbol_inFrontOfText

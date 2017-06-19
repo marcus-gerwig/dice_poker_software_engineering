@@ -1,4 +1,6 @@
-package de.htwg.se.dicepoker.model.impl
+package de.htwg.se.dicepoker.model.tableComponent
+
+import de.htwg.se.dicepoker.model.playerComponent.Player
 
 case class Bid(bidResult: Result, bidPlayer: Player) {
   def this() = this(null, null)

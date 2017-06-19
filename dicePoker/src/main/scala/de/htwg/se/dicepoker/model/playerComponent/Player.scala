@@ -1,7 +1,8 @@
-package de.htwg.se.dicepoker.model.impl
+package de.htwg.se.dicepoker.model.playerComponent
 
 import de.htwg.se.dicepoker.util.AppConst
 import scala.compat.Platform.EOL
+import de.htwg.se.dicepoker.model.tableComponent.DiceCup
 
 case class Player(name: String, diceCount: Int = AppConst.number_of_dice, diceCup: DiceCup) {
 
