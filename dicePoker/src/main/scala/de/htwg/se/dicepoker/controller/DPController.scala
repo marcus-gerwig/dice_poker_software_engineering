@@ -23,6 +23,7 @@ import de.htwg.se.dicepoker.util.GameIsOver
 import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.LineSeparator
 import de.htwg.se.dicepoker.model.playerComponent.Player
+import de.htwg.se.dicepoker.model.roundComponent.Round
 
 class DPController(var table: PokerTable) extends Observable {
 
