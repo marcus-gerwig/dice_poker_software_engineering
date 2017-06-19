@@ -2,6 +2,8 @@ package de.htwg.se.dicepoker.model
 
 import org.scalatest.WordSpec
 import org.scalatest.Matchers
+import de.htwg.se.dicepoker.model.impl.Result
+import de.htwg.se.dicepoker.model.impl.DiceCup
 
 class DiceCupSpec extends WordSpec with Matchers {
   "A DiceCup" can {

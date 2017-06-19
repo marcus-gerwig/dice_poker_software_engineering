@@ -1,7 +1,4 @@
-
-
-package de.htwg.se.dicepoker.model
-import scala.util.Random
+package de.htwg.se.dicepoker.model.impl
 
 case class DiceCup(dieCombi: List[Int]) {
 

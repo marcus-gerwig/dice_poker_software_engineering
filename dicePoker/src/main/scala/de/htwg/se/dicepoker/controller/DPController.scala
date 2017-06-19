@@ -1,6 +1,10 @@
 package de.htwg.se.dicepoker.controller
 
-import de.htwg.se.dicepoker.model.{ PokerTable, Player, Bid, Round }
+import de.htwg.se.dicepoker.model.IField
+import de.htwg.se.dicepoker.model.impl.Player
+import de.htwg.se.dicepoker.model.impl.PokerTable
+import de.htwg.se.dicepoker.model.impl.Bid
+import de.htwg.se.dicepoker.model.impl.Round
 import de.htwg.se.dicepoker.util.Observable
 import de.htwg.se.dicepoker.util.DiceWereRollen
 import de.htwg.se.dicepoker.util.PlayerHasWonRound

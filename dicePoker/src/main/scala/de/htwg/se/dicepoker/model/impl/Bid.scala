@@ -1,5 +1,4 @@
-package de.htwg.se.dicepoker.model
-import scala.util.matching
+package de.htwg.se.dicepoker.model.impl
 
 case class Bid(bidResult: Result, bidPlayer: Player) {
   def this() = this(null, null)

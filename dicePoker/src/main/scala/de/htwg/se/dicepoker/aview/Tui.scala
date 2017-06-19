@@ -1,7 +1,7 @@
 package de.htwg.se.dicepoker.aview
 
 import de.htwg.se.dicepoker.controller.DPController
-import de.htwg.se.dicepoker.model.{ _ }
+import de.htwg.se.dicepoker.model.impl.{ _ }
 
 import de.htwg.se.dicepoker.util.Observer
 import de.htwg.se.dicepoker.util.AppConst

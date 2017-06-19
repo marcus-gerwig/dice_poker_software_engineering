@@ -2,6 +2,9 @@ package de.htwg.se.dicepoker.model
 
 import org.scalatest.WordSpec
 import org.scalatest.Matchers
+import de.htwg.se.dicepoker.model.impl.Player
+import de.htwg.se.dicepoker.model.impl.DiceCup
+import de.htwg.se.dicepoker.model.impl.PokerTable
 
 class PokerTableSpec extends WordSpec with Matchers {
 

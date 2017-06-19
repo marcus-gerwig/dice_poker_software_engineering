@@ -1,4 +1,4 @@
-package de.htwg.se.dicepoker.model
+package de.htwg.se.dicepoker.model.impl
 
 case class Result(dieValue: Int, frequency: Int) {
 
