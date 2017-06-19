@@ -25,7 +25,7 @@ import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.EnterPlayerName
 import de.htwg.se.dicepoker.util.LetShowBegin
 import de.htwg.se.dicepoker.util.LineSeparator
-import de.htwg.se.dicepoker.model.playerComponent.Player
+import de.htwg.se.dicepoker.model.tableComponent.Player
 
 class Tui(controller: DPController) extends Observer {
   val tui = AppConst.tui_symbol_inFrontOfText

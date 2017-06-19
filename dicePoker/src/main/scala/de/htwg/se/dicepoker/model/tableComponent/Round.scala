@@ -1,6 +1,6 @@
-package de.htwg.se.dicepoker.model.roundComponent
+package de.htwg.se.dicepoker.model.tableComponent
 
-import de.htwg.se.dicepoker.model.playerComponent.Player
+import de.htwg.se.dicepoker.model.tableComponent.Player
 import de.htwg.se.dicepoker.model.tableComponent.Bid
 
 case class Round(highestBid: Bid) {

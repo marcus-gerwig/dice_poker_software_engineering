@@ -1,7 +1,7 @@
 package de.htwg.se.dicepoker.model.tableComponent
 
 import scala.Vector
-import de.htwg.se.dicepoker.model.playerComponent.Player
+import de.htwg.se.dicepoker.model.tableComponent.Player
 
 case class PokerTable(players: Vector[Player]) {
 

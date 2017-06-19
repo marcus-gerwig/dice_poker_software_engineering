@@ -2,7 +2,6 @@ package de.htwg.se.dicepoker.controller
 
 import de.htwg.se.dicepoker.model.IField
 import de.htwg.se.dicepoker.model.tableComponent._
-import de.htwg.se.dicepoker.model.playerComponent._
 import de.htwg.se.dicepoker.util.Observable
 import de.htwg.se.dicepoker.util.DiceWereRollen
 import de.htwg.se.dicepoker.util.PlayerHasWonRound
@@ -22,8 +21,9 @@ import de.htwg.se.dicepoker.util.GameWasCancelled
 import de.htwg.se.dicepoker.util.GameIsOver
 import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.LineSeparator
-import de.htwg.se.dicepoker.model.playerComponent.Player
-import de.htwg.se.dicepoker.model.roundComponent.Round
+import de.htwg.se.dicepoker.model.tableComponent.Player
+import de.htwg.se.dicepoker.model.tableComponent.Round
+import de.htwg.se.dicepoker.model.tableComponent.Bid
 
 class DPController(var table: PokerTable) extends Observable {
 

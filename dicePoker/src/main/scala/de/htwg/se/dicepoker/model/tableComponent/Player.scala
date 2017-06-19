@@ -1,4 +1,4 @@
-package de.htwg.se.dicepoker.model.playerComponent
+package de.htwg.se.dicepoker.model.tableComponent
 
 import de.htwg.se.dicepoker.util.AppConst
 import scala.compat.Platform.EOL

@@ -2,8 +2,9 @@ package de.htwg.se.dicepoker.model.tableComponent
 
 import org.scalatest.WordSpec
 import org.scalatest.Matchers
-import de.htwg.se.dicepoker.model.playerComponent.Player
-import de.htwg.se.dicepoker.model.roundComponent.Round
+import de.htwg.se.dicepoker.model.tableComponent.Player
+import de.htwg.se.dicepoker.model.tableComponent.Round
+import de.htwg.se.dicepoker.model.tableComponent.Bid
 
 class RoundSpec extends WordSpec with Matchers{
 
