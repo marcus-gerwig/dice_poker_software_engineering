@@ -20,8 +20,9 @@ import de.htwg.se.dicepoker.util.GameWasCancelled
 import de.htwg.se.dicepoker.util.GameIsOver
 import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.LineSeparator
+import scala.swing.Publisher
 
-class DPController(var table: PokerTable) extends Observable {
+class DPController(var table: PokerTable) extends Publisher {
 
   var lastLoser: Player = null
   var playerStarted: Player = null
@@ -30,7 +31,8 @@ class DPController(var table: PokerTable) extends Observable {
   var currentRound: Round = null
 
   def createPlayers: Unit = {
-    notifyObservers(WelcomeMsg)
+    publish(new WelcomeMsg)
+//    notifyObservers(WelcomeMsg)
     table = new PokerTable(initPlayer)
   }
   
@@ -42,16 +44,20 @@ class DPController(var table: PokerTable) extends Observable {
     for (i <- 1 to AppConst.number_of_player) {
       index = i
       EnterPlayerName.set(index)
-      notifyObservers(EnterPlayerName)
+      publish(EnterPlayerName)
+//      notifyObservers(EnterPlayerName)
       players = players :+ newPlayer(lastUserInteraction)
     }
-    notifyObservers(LetShowBegin)
+    publish(LetShowBegin)
+//    notifyObservers(LetShowBegin)
     players
   }
 
   def menuNavigation = {
-    notifyObservers(ExplainCommands)
-    notifyObservers(Input)
+    publish(ExplainCommands)
+//    notifyObservers(ExplainCommands)
+    publish(Input)
+//    notifyObservers(Input)
     lastUserInteraction match {
       case "q" => {
         setUserInteraction("Q")
@@ -60,8 +66,10 @@ class DPController(var table: PokerTable) extends Observable {
         while (!gameIsOver) newRound
         val winner = whoWonTheGame
         GameIsOver.set(winner)
-        notifyObservers(GameIsOver)
-        notifyObservers(GameWasCancelled)
+        publish(GameIsOver)
+//        notifyObservers(GameIsOver)
+        publish(GameWasCancelled)
+//        notifyObservers(GameWasCancelled)
       }
       case "r" =>
     }
@@ -69,7 +77,8 @@ class DPController(var table: PokerTable) extends Observable {
 
   def rolling: Unit = {
     table = table.rollTheDice
-    notifyObservers(DiceWereRollen)
+    publish(DiceWereRollen)
+//    notifyObservers(DiceWereRollen)
   }
   
 
@@ -78,10 +87,13 @@ class DPController(var table: PokerTable) extends Observable {
     playerStarted = whichPlayerStarts
     playerFollowed = whichPlayerFollows(playerStarted)
 
-    notifyObservers(NewRound)
+    publish(NewRound)
+//    notifyObservers(NewRound)
     do {
-      notifyObservers(DeclareFirstBid)
-      notifyObservers(Input)
+      publish(DeclareFirstBid)
+//      notifyObservers(DeclareFirstBid)
+      publish(Input)
+//      notifyObservers(Input)
     } while (!inputIsValid(lastUserInteraction, playerStarted))
     val bid = newBid(lastUserInteraction, playerStarted)
     currentRound = newRound(bid)
@@ -89,7 +101,8 @@ class DPController(var table: PokerTable) extends Observable {
   }
 
   def continue: Unit = {
-    notifyObservers(AskIfMistrusts)
+    publish(AskIfMistrusts)
+//    notifyObservers(AskIfMistrusts)
     lastUserInteraction match {
       case "b" => {
         currentRound = raiseBid(playerFollowed)
@@ -101,22 +114,27 @@ class DPController(var table: PokerTable) extends Observable {
         if (lastLoser.equals(currentRound.highestBid.bidPlayer)) playerLied
         else playerDidNotLie
         PlayerHasWonRound.set(roundWinner)
-        notifyObservers(PlayerHasWonRound)
+        publish(PlayerHasWonRound)
+//        notifyObservers(PlayerHasWonRound)
       }
     }
   }
 
   def raiseBid(playerRaises: Player): Round = {
-    notifyObservers(LineSeparator)
+    publish(LineSeparator)
+//    notifyObservers(LineSeparator)
     var bid: Bid = null
     var newRound: Round = new Round()
     var inputCorrect = false
     do {
       PrintPlayer.set(playerRaises)
-      notifyObservers(PrintPlayer)
+      publish(PrintPlayer)
+//      notifyObservers(PrintPlayer)
       RequestHigherBid.set(playerRaises)
-      notifyObservers(RequestHigherBid)
-      notifyObservers(Input)
+      publish(RequestHigherBid)
+//      notifyObservers(RequestHigherBid)
+      publish(Input)
+//      notifyObservers(Input)
       if (inputIsValid(lastUserInteraction, playerRaises) && newBidIsHigher(lastUserInteraction)) {
         inputCorrect = true
         bid = newBid(lastUserInteraction, playerRaises)
@@ -145,8 +163,10 @@ class DPController(var table: PokerTable) extends Observable {
   }
   def gameIsOver: Boolean = table.players.exists { p => p.hasLostGame }
   def whoWonTheGame: Player = table.players.filterNot { p => p.hasLostGame }.head
-  def playerLied: Unit = notifyObservers(PlayerWithHighestBidLied)
-  def playerDidNotLie = notifyObservers(PlayerWithHighestBidNotLied)
+  def playerLied: Unit = publish(PlayerWithHighestBidLied)
+//    notifyObservers(PlayerWithHighestBidLied)
+  def playerDidNotLie = publish(PlayerWithHighestBidNotLied)
+//    notifyObservers(PlayerWithHighestBidNotLied)
   def decrementLoserDiceCount(winner: Player) = table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound } :+ winner)
 
   def inputIsValid(input: String, player: Player): Boolean = new Bid().inputIsValidBid(input, player)
@@ -164,15 +184,15 @@ class DPController(var table: PokerTable) extends Observable {
   def playerName(player: Player) = player.name
   def playerResult(player: Player) = player.diceCup.getMaxResult()
   def getPlayerStarted: Player = playerStarted
-  def stopGameWanted: Unit = if (lastUserInteraction == "Q") { notifyObservers(GameWasCancelled); System.exit(0) }
+  def stopGameWanted: Unit = if (lastUserInteraction == "Q") {
+    publish (GameWasCancelled)
+//    notifyObservers(GameWasCancelled); 
+    System.exit(0) }
   
   
   //methods added from Andreas Graule
   
-   def createPlayers (players: Vector[Player]) = {
-    
-    table = new PokerTable(players)
-  }
+   
    
   def newRoundGUI: Unit = {
     rolling
