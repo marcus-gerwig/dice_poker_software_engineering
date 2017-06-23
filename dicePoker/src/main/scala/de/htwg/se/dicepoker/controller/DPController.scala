@@ -9,10 +9,7 @@ class DPController(var table: PokerTable) extends Observable {
   var lastLoser: Option[Player] = None
   var playerStarted: Option[Player] = None
   var playerFollowed: Player = null
-  var lastUserInteraction: String = ""
   var currentRound: Round = null
-
-  def setUserInteraction(text: String) = lastUserInteraction = text
 
   def createPlayers: Unit = {
     notifyObservers(WelcomeMsg)
@@ -31,23 +28,6 @@ class DPController(var table: PokerTable) extends Observable {
   def menuNavigation = {
     notifyObservers(ExplainCommands)
     notifyObservers(Input)
-    /*
-    lastUserInteraction match {
-      case "q" => {
-         setUserInteraction("Q")
-      }
-      case "s" => {
-        while (!gameIsOver) newRound
-        val winner = whoWonTheGame
-        GameIsOver.set(winner)
-        //        publish(GameIsOver)
-        notifyObservers(GameIsOver)
-        //        publish(GameWasCancelled)
-        notifyObservers(GameWasCancelled)
-      }
-      case "r" =>
-    }
-*/
   }
 
   def startGame = {
@@ -70,39 +50,13 @@ class DPController(var table: PokerTable) extends Observable {
 
     notifyObservers(NewRound)
     notifyObservers(DeclareFirstBid)
-    /*
-    do {
-      notifyObservers(DeclareFirstBid)
-      notifyObservers(Input)
-    } while (!inputIsValid(lastUserInteraction, playerStarted.get))
-    val bid = newBid(lastUserInteraction, playerStarted.get)
-    currentRound = newRound(bid)
-    continue
-*/
   }
 
   def continue: Unit = {
     notifyObservers(AskIfMistrusts)
-    /*
-    lastUserInteraction match {
-      case "b" => {
-        currentRound = raiseBid(playerFollowed)
-        continue
-      }
-      case "m" => {
-        val roundWinner: Player = solveRound
-        lastLoser = if (playerStarted.eq(roundWinner)) Some(playerFollowed) else Some(playerStarted.get)
-        if (lastLoser.get.equals(currentRound.highestBid.bidPlayer)) playerLied
-        else playerDidNotLie
-        PlayerHasWonRound.set(roundWinner)
-        notifyObservers(PlayerHasWonRound)
-      }
-    }
-*/
   }
 
   def playerRaisesBid(playerRaises: Player) = {
-    //currentRound = raiseBid(playerFollowed)
     PrintPlayer.set(playerRaises)
     notifyObservers(PrintPlayer)
     if (higherBidIsNotPossible(playerRaises)) playerMistrusts
@@ -121,29 +75,6 @@ class DPController(var table: PokerTable) extends Observable {
     PlayerHasWonRound.set(roundWinner)
     notifyObservers(PlayerHasWonRound)
   }
-
-  /*
-  def raiseBid(playerRaises: Player): Round = {
-    notifyObservers(LineSeparator)
-    var bid: Bid = null
-    var newRound: Round = new Round()
-    var inputCorrect = false
-    do {
-      PrintPlayer.set(playerRaises)
-      notifyObservers(PrintPlayer)
-      RequestHigherBid.set(playerRaises)
-      notifyObservers(RequestHigherBid)
-
-      notifyObservers(Input)
-      if (inputIsValid(lastUserInteraction, playerRaises) && newBidIsHigher(lastUserInteraction)) {
-        inputCorrect = true
-        bid = newBid(lastUserInteraction, playerRaises)
-        newRound = raiseHighestBid(bid)
-      }
-    } while (inputCorrect == false)
-    newRound
-  }
-*/
 
   def newPlayer(name: String): Player = new Player(name)
 
@@ -178,13 +109,6 @@ class DPController(var table: PokerTable) extends Observable {
   def newBidIsHigher(input: String): Boolean = if (newBid(input, null).bidResult.isHigherThan(currentRound.highestBid.bidResult)) true else false
 
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
-
-  /*
-  def setUserInteraction(input: String): Unit = {
-    lastUserInteraction = input
-    stopGameWanted
-  }
-*/
 
   def printTable = table.toString()
 

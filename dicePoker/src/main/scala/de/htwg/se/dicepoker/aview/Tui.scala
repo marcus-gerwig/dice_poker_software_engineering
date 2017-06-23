@@ -55,9 +55,9 @@ class Tui(controller: DPController) extends Observer {
       case Input => {
         val input = readLine
         input match {
-          case "s" => controller.startGame
           case "q" => controller.stopGameWanted
           case "r" => controller.menuNavigation
+          case _ => controller.startGame
         }
       }
       case AskIfMistrusts => {
