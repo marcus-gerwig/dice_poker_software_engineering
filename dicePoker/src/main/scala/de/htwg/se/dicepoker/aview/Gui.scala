@@ -11,6 +11,9 @@ import scala.swing.Label
 import scala.swing.TextField
 import scala.swing._
 import javax.swing.ImageIcon
+import javax.swing.border.EmptyBorder
+import Swing._
+import java.awt.Color
 
 import de.htwg.se.dicepoker.model.{Bid, Player, PokerTable, Round}
 
@@ -62,10 +65,14 @@ class Gui(controller: DPController) extends Frame with Observer {
 
   val bidInput = newIField
 
-  def newTField = new TextField {
-    text = "Name"
+  def newTField(initialText: String) = new TextField {
+    text = initialText
     columns = 5
     horizontalAlignment = Alignment.Right
+  }
+
+  def restrictHeight(s: Component) {
+    s.maximumSize = new Dimension(Short.MaxValue, s.preferredSize.height)
   }
 
   centerOnScreen
@@ -78,31 +85,40 @@ class Gui(controller: DPController) extends Frame with Observer {
         println("GUI is starting")
 
       case EnterPlayerName => {
-        val namePlayer = newTField
-        val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
-        val labelPlayer1 = new Label("Hello Player 1! Please enter your name: ")
-        val labelPlayer2 = new Label("Hello Player 2! Please enter your name: ")
-        val namePlayer1 = newTField
-        val namePlayer2 = newTField
+        val labelPlayer1 = new Label("Hello Player 1 ! Please enter your name: ")
+        val labelPlayer2 = new Label("Hello Player 2 ! Please enter your name: ")
+        val namePlayer1 = newTField("Mac")
+        val namePlayer2 = newTField("Andi")
         val commitButton = new Button(Action("Continue") {
-          controller.setPlayerName(1,namePlayer1.text)
+          controller.setPlayerName(1, namePlayer1.text)
           controller.setPlayerName(2, namePlayer2.text)
+          controller.menuNavigation
         })
-        contents = new FlowPanel(new Label(" Hello Player " + index + " Please enter your name: "), namePlayer, new Button(Action("Continue") {
-          println(namePlayer.text) /*controller.setUserInteraction(namePlayer.text)*/ ;
-          println(namePlayer.text)
-        })) {
-          border = Swing.EmptyBorder(15, 10, 10, 10)
-          centerOnScreen
-          visible = true
-          contents += labelPlayer1
+        restrictHeight(namePlayer1)
+
+        contents = new BoxPanel(Orientation.Vertical) {
+          contents += new BoxPanel(Orientation.Horizontal) {
+            border = Swing.EmptyBorder(10, 10, 10, 10)
+            contents += labelPlayer1
+            contents += Swing.HStrut(5)
+            contents += namePlayer1
+          }
+          contents += Swing.VStrut(5)
+          contents += new BoxPanel(Orientation.Horizontal) {
+            contents += labelPlayer2
+            contents += Swing.HStrut(5)
+            contents += namePlayer2
+          }
+          contents += Swing.VStrut(5)
+          contents += new BoxPanel(Orientation.Horizontal) {
+            contents += commitButton
+          }
+          for (e <- contents)
+            e.xLayoutAlignment = 0.0
         }
-
-
-
       }
       case LetShowBegin => println("Spielstart")
-      case ExplainCommands => /*controller.setUserInteraction("s")*/
+      case ExplainCommands => controller.startGame
       case DiceWereRollen => {
         controller.getPlayerStarted match {
           case None =>
@@ -120,7 +136,12 @@ class Gui(controller: DPController) extends Frame with Observer {
         val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
         new FlowPanel(new Label(controller.playerName(winner.get) + " did not lie. His actual result was " + controller.playerResult(winner.get) + "."), new Button(Action("Continue") {}))
       }
-      case NewRound => new FlowPanel(new Label("New Round"), new Button(Action("Continue") {}))
+      case NewRound => contents = {
+        new FlowPanel(new Label("New Round"), new Button(Action("Continue") {
+
+
+        }))
+      }
       case DeclareFirstBid => new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):"), bidInput, new Button(Action("Continue") {
         /*controller.setUserInteraction(bidInput.text)*/
       }))

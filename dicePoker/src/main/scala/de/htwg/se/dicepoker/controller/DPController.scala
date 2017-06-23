@@ -131,6 +131,7 @@ class DPController(var table: PokerTable) extends Observable{
   }
 
   def setPlayerName(index: Int, name: String) = {
+    if(table == null) table = new PokerTable(Vector.empty)
     var currPlayer: Vector[Player] = table.players
     val newPlayer: Player = new Player(name)
     currPlayer = currPlayer :+ newPlayer
