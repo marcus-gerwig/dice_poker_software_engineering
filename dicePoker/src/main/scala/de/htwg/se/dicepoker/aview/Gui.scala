@@ -20,10 +20,10 @@ import de.htwg.se.dicepoker.util._
 
 class Gui(controller: DPController) extends Frame with Observer {
 
-//  listenTo(controller)
+  //  listenTo(controller)
   title = "Dice Poker"
   controller.add(this)
-  
+
   controller.createPlayers
 
   def processInputLine() = {
@@ -64,76 +64,76 @@ class Gui(controller: DPController) extends Frame with Observer {
   centerOnScreen
   visible = true
 
- override def update(e: Event): Unit = {
-      e match {
+  override def update(e: Event): Unit = {
+    e match {
 
-    case WelcomeMsg =>
-      println("GUI is starting")
-      menuBar = new MenuBar {
-        contents += new Menu("File") {
-          contents += new MenuItem(Action("Quit") { System.exit(0) })
+      case WelcomeMsg =>
+        println("GUI is starting")
+        menuBar = new MenuBar {
+          contents += new Menu("File") {
+            contents += new MenuItem(Action("Quit") { System.exit(0) })
+            centerOnScreen
+            visible = true
+          }
+        }
+
+      case EnterPlayerName => {
+        val namePlayer = newTField
+        val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
+        contents = new FlowPanel(new Label(" Hello Player " + index + " Please enter your name: "), namePlayer, new Button(Action("Continue") { controller.setUserInteraction(namePlayer.text); println(namePlayer.text) })) {
+          border = Swing.EmptyBorder(15, 10, 10, 10)
           centerOnScreen
           visible = true
+          //        listenTo(nameButton)
         }
-      }
-
-    case EnterPlayerName => {
-      val namePlayer = newTField
-      val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
-      contents = new FlowPanel(new Label(" Hello Player " + index + " Please enter your name: "), namePlayer, new Button(Action("Continue") { controller.setUserInteraction(namePlayer.text); println(namePlayer.text) })) {
-        border = Swing.EmptyBorder(15, 10, 10, 10)
-        centerOnScreen
-        visible = true
-        //        listenTo(nameButton)
-      }
-
-    }
-    case LetShowBegin    => println("Spielstart") 
-    case ExplainCommands => controller.setUserInteraction("s")
-    case DiceWereRollen => {
-      controller.getPlayerStarted match {
-        case None =>
-        case Some(playerStarted) => new FlowPanel(new Label(playerStarted.name + ": "), picSelection(0, playerStarted), picSelection(1, playerStarted), picSelection(2, playerStarted), new Button(Action("Continue") {}))
 
       }
-     
-    }
-    case PlayerHasWonRound => {
-      val winner = controller.playerName(PlayerHasWonRound.attachment.asInstanceOf[Player])
-      new FlowPanel(new Label(winner + " has won this round!"), new Button(Action("Continue") {}))
-    }
-    case PlayerWithHighestBidLied => new FlowPanel(new Label(controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + "."), new Button(Action("Continue") {}))
-    case PlayerWithHighestBidNotLied => {
-      val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
-      new FlowPanel(new Label(controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + "."), new Button(Action("Continue") {}))
-    }
-    case NewRound        => new FlowPanel(new Label("New Round"), new Button(Action("Continue") {}))
-    case DeclareFirstBid => new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):"), bidInput, new Button(Action("Continue") { controller.setUserInteraction(bidInput.text) }))
-    case LineSeparator   =>
-    case Input           =>
-    case AskIfMistrusts => {
+      case LetShowBegin => println("Spielstart")
+      case ExplainCommands => controller.setUserInteraction("s")
+      case DiceWereRollen => {
+        controller.getPlayerStarted match {
+          case None =>
+          case Some(playerStarted) => new FlowPanel(new Label(playerStarted.name + ": "), picSelection(0, playerStarted), picSelection(1, playerStarted), picSelection(2, playerStarted), new Button(Action("Continue") {}))
 
-      new FlowPanel(new Label("Highest bid at the moment = " + controller.getHighestBidResult), new Button(Action("Continue") {}))
-      new FlowPanel(new Label("Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer))), new Button(Action("Continue") {}))
-      new FlowPanel(new Label("Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?"), new Button(Action("Mistrust") { controller.setUserInteraction("m") }), new Button(Action("Set Higher Bid") { controller.setUserInteraction("b") }))
+        }
+
+      }
+      case PlayerHasWonRound => {
+        val winner = controller.playerName(PlayerHasWonRound.attachment.asInstanceOf[Player])
+        new FlowPanel(new Label(winner + " has won this round!"), new Button(Action("Continue") {}))
+      }
+      case PlayerWithHighestBidLied => new FlowPanel(new Label(controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + "."), new Button(Action("Continue") {}))
+      case PlayerWithHighestBidNotLied => {
+        val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
+        new FlowPanel(new Label(controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + "."), new Button(Action("Continue") {}))
+      }
+      case NewRound => new FlowPanel(new Label("New Round"), new Button(Action("Continue") {}))
+      case DeclareFirstBid => new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):"), bidInput, new Button(Action("Continue") { controller.setUserInteraction(bidInput.text) }))
+      case LineSeparator =>
+      case Input =>
+      case AskIfMistrusts => {
+
+        new FlowPanel(new Label("Highest bid at the moment = " + controller.getHighestBidResult), new Button(Action("Continue") {}))
+        new FlowPanel(new Label("Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer))), new Button(Action("Continue") {}))
+        new FlowPanel(new Label("Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?"), new Button(Action("Mistrust") { controller.setUserInteraction("m") }), new Button(Action("Set Higher Bid") { controller.setUserInteraction("b") }))
+
+      }
+      case PrintPlayer => {
+        val player: Player = PrintPlayer.attachment.asInstanceOf[Player]
+        new FlowPanel(new Label("Name: " + player.name + " Number_Of_Dice: " + player.diceCount + " DiceCup: " + player.diceCup.toString()), new Button(Action("Continue") {}))
+      }
+      case RequestHigherBid => {
+        val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
+        new FlowPanel(new Label(controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :"), bidInput, new Button(Action("Continue") { controller.setUserInteraction(bidInput.text) }))
+      }
+      case GameIsOver => {
+        val winner = controller.playerName(GameIsOver.attachment.asInstanceOf[Player])
+        new FlowPanel(new Label("...and the winner is " + winner + "!  " + "Congratulations, " + winner + "!"), new Button(Action("Restart") { controller.createPlayers }), new Button(Action("Quit") { System.exit(0) }))
+
+      }
+      case GameWasCancelled =>
 
     }
-    case PrintPlayer => {
-      val player: Player = PrintPlayer.attachment.asInstanceOf[Player]
-      new FlowPanel(new Label("Name: " + player.name + " Number_Of_Dice: " + player.diceCount + " DiceCup: " + player.diceCup.toString()), new Button(Action("Continue") {}))
-    }
-    case RequestHigherBid => {
-      val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
-      new FlowPanel(new Label(controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :"), bidInput, new Button(Action("Continue") { controller.setUserInteraction(bidInput.text) }))
-    }
-    case GameIsOver => {
-      val winner = controller.playerName(GameIsOver.attachment.asInstanceOf[Player])
-      new FlowPanel(new Label("...and the winner is " + winner + "!  " + "Congratulations, " + winner + "!"), new Button(Action("Restart") { controller.createPlayers }), new Button(Action("Quit") { System.exit(0) }))
-
-    }
-    case GameWasCancelled =>
-
-  }
   }
   //  def nextScreen(methodName: String) =
   //    playerNameInput

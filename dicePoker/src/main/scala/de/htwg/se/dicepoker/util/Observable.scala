@@ -1,7 +1,6 @@
 package de.htwg.se.dicepoker.util
 import de.htwg.se.dicepoker.model._
 
-
 trait Observer {
   def update(e: Event): Unit
 }
