@@ -22,17 +22,17 @@ import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.LineSeparator
 import scala.swing.Publisher
 
-class DPController(var table: PokerTable) extends Publisher {
+class DPController(var table: PokerTable) extends Observable {
 
-  var lastLoser: Player = null
-  var playerStarted: Player = null
+  var lastLoser: Option[Player] = None
+  var playerStarted: Option[Player] = None
   var playerFollowed: Player = null
-  var lastUserInteraction: String = null
+  var lastUserInteraction: String = ""
   var currentRound: Round = null
 
   def createPlayers: Unit = {
-    publish(new WelcomeMsg)
-//    notifyObservers(WelcomeMsg)
+//    publish(new WelcomeMsg)
+    notifyObservers(WelcomeMsg)
     table = new PokerTable(initPlayer)
   }
   
@@ -40,24 +40,31 @@ class DPController(var table: PokerTable) extends Publisher {
 
   def initPlayer = {
     var players: Vector[Player] = Vector.empty
-    var index = 0
-    for (i <- 1 to AppConst.number_of_player) {
-      index = i
+ 
+    for (index <- 1 to AppConst.number_of_player) {
+
       EnterPlayerName.set(index)
-      publish(EnterPlayerName)
-//      notifyObservers(EnterPlayerName)
+//      publish(EnterPlayerName)
+      
+      
+      
+      notifyObservers(EnterPlayerName)
+      while(lastUserInteraction == ""){
+      
+      }
+      
       players = players :+ newPlayer(lastUserInteraction)
     }
-    publish(LetShowBegin)
-//    notifyObservers(LetShowBegin)
+//    publish(LetShowBegin)
+    notifyObservers(LetShowBegin)
     players
   }
 
   def menuNavigation = {
-    publish(ExplainCommands)
-//    notifyObservers(ExplainCommands)
-    publish(Input)
-//    notifyObservers(Input)
+//    publish(ExplainCommands)
+    notifyObservers(ExplainCommands)
+//    publish(Input)
+    notifyObservers(Input)
     lastUserInteraction match {
       case "q" => {
         setUserInteraction("Q")
@@ -66,10 +73,10 @@ class DPController(var table: PokerTable) extends Publisher {
         while (!gameIsOver) newRound
         val winner = whoWonTheGame
         GameIsOver.set(winner)
-        publish(GameIsOver)
-//        notifyObservers(GameIsOver)
-        publish(GameWasCancelled)
-//        notifyObservers(GameWasCancelled)
+//        publish(GameIsOver)
+        notifyObservers(GameIsOver)
+//        publish(GameWasCancelled)
+        notifyObservers(GameWasCancelled)
       }
       case "r" =>
     }
@@ -77,32 +84,32 @@ class DPController(var table: PokerTable) extends Publisher {
 
   def rolling: Unit = {
     table = table.rollTheDice
-    publish(DiceWereRollen)
-//    notifyObservers(DiceWereRollen)
+//    publish(DiceWereRollen)
+    notifyObservers(DiceWereRollen)
   }
   
 
   def newRound: Unit = {
     rolling
     playerStarted = whichPlayerStarts
-    playerFollowed = whichPlayerFollows(playerStarted)
+    playerFollowed = whichPlayerFollows(playerStarted.get)
 
-    publish(NewRound)
-//    notifyObservers(NewRound)
+//    publish(NewRound)
+    notifyObservers(NewRound)
     do {
-      publish(DeclareFirstBid)
-//      notifyObservers(DeclareFirstBid)
-      publish(Input)
-//      notifyObservers(Input)
-    } while (!inputIsValid(lastUserInteraction, playerStarted))
-    val bid = newBid(lastUserInteraction, playerStarted)
+//      publish(DeclareFirstBid)
+      notifyObservers(DeclareFirstBid)
+//      publish(Input)
+      notifyObservers(Input)
+    } while (!inputIsValid(lastUserInteraction, playerStarted.get))
+    val bid = newBid(lastUserInteraction, playerStarted.get)
     currentRound = newRound(bid)
     continue
   }
 
   def continue: Unit = {
-    publish(AskIfMistrusts)
-//    notifyObservers(AskIfMistrusts)
+//    publish(AskIfMistrusts)
+    notifyObservers(AskIfMistrusts)
     lastUserInteraction match {
       case "b" => {
         currentRound = raiseBid(playerFollowed)
@@ -110,31 +117,31 @@ class DPController(var table: PokerTable) extends Publisher {
       }
       case "m" => {
         val roundWinner: Player = solveRound
-        lastLoser = if (playerStarted.eq(roundWinner)) playerFollowed else playerStarted
-        if (lastLoser.equals(currentRound.highestBid.bidPlayer)) playerLied
+        lastLoser = if (playerStarted.eq(roundWinner)) Some(playerFollowed) else Some(playerStarted.get)
+        if (lastLoser.get.equals(currentRound.highestBid.bidPlayer)) playerLied
         else playerDidNotLie
         PlayerHasWonRound.set(roundWinner)
-        publish(PlayerHasWonRound)
-//        notifyObservers(PlayerHasWonRound)
+//        publish(PlayerHasWonRound)
+        notifyObservers(PlayerHasWonRound)
       }
     }
   }
 
   def raiseBid(playerRaises: Player): Round = {
-    publish(LineSeparator)
-//    notifyObservers(LineSeparator)
+//    publish(LineSeparator)
+    notifyObservers(LineSeparator)
     var bid: Bid = null
     var newRound: Round = new Round()
     var inputCorrect = false
     do {
       PrintPlayer.set(playerRaises)
-      publish(PrintPlayer)
-//      notifyObservers(PrintPlayer)
+//      publish(PrintPlayer)
+      notifyObservers(PrintPlayer)
       RequestHigherBid.set(playerRaises)
-      publish(RequestHigherBid)
-//      notifyObservers(RequestHigherBid)
-      publish(Input)
-//      notifyObservers(Input)
+//      publish(RequestHigherBid)
+      notifyObservers(RequestHigherBid)
+//      publish(Input)
+      notifyObservers(Input)
       if (inputIsValid(lastUserInteraction, playerRaises) && newBidIsHigher(lastUserInteraction)) {
         inputCorrect = true
         bid = newBid(lastUserInteraction, playerRaises)
@@ -151,7 +158,7 @@ class DPController(var table: PokerTable) extends Publisher {
   def getHighestBidResult = currentRound.highestBid.bidResult
   def getHighestBidPlayer: Player = currentRound.highestBid.bidPlayer
 
-  def whichPlayerStarts: Player = if (lastLoser == null) table.players(scala.util.Random.nextInt(table.players.length)) else table.players.filter { p => p.equals(lastLoser) }.head
+  def whichPlayerStarts: Option[Player] = if (lastLoser == None) Some(table.players(scala.util.Random.nextInt(table.players.length))) else Some(table.players.filter { p => p.equals(lastLoser.get) }.head)
   def whichPlayerFollows(startingPlayer: Player): Player = table.players.filter { p => !p.equals(startingPlayer) }.head
 
   def solveRound: Player = {
@@ -163,10 +170,12 @@ class DPController(var table: PokerTable) extends Publisher {
   }
   def gameIsOver: Boolean = table.players.exists { p => p.hasLostGame }
   def whoWonTheGame: Player = table.players.filterNot { p => p.hasLostGame }.head
-  def playerLied: Unit = publish(PlayerWithHighestBidLied)
-//    notifyObservers(PlayerWithHighestBidLied)
-  def playerDidNotLie = publish(PlayerWithHighestBidNotLied)
-//    notifyObservers(PlayerWithHighestBidNotLied)
+  def playerLied: Unit = 
+//    publish(PlayerWithHighestBidLied)
+    notifyObservers(PlayerWithHighestBidLied)
+  def playerDidNotLie = 
+//    publish(PlayerWithHighestBidNotLied)
+    notifyObservers(PlayerWithHighestBidNotLied)
   def decrementLoserDiceCount(winner: Player) = table = table.updateTable(table.players.filterNot { p => p.equals(winner) }.map { p => p.hasLostRound } :+ winner)
 
   def inputIsValid(input: String, player: Player): Boolean = new Bid().inputIsValidBid(input, player)
@@ -183,10 +192,10 @@ class DPController(var table: PokerTable) extends Publisher {
   def getLastLoser = lastLoser
   def playerName(player: Player) = player.name
   def playerResult(player: Player) = player.diceCup.getMaxResult()
-  def getPlayerStarted: Player = playerStarted
+  def getPlayerStarted: Option[Player] = playerStarted
   def stopGameWanted: Unit = if (lastUserInteraction == "Q") {
-    publish (GameWasCancelled)
-//    notifyObservers(GameWasCancelled); 
+//    publish (GameWasCancelled)
+    notifyObservers(GameWasCancelled); 
     System.exit(0) }
   
   
@@ -197,7 +206,7 @@ class DPController(var table: PokerTable) extends Publisher {
   def newRoundGUI: Unit = {
     rolling
     playerStarted = whichPlayerStarts
-    playerFollowed = whichPlayerFollows(playerStarted)
+    playerFollowed = whichPlayerFollows(playerStarted.get)
   }
   
   def getPlayerFollowed: Player = playerFollowed

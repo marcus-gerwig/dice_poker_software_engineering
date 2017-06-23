@@ -7,7 +7,7 @@ import de.htwg.se.dicepoker.util.Observer
 import de.htwg.se.dicepoker.util.AppConst
 
 import scala.compat.Platform.EOL
-//import de.htwg.se.dicepoker.util.Event
+import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util.DiceWereRollen
 import de.htwg.se.dicepoker.util.PlayerHasWonRound
 import de.htwg.se.dicepoker.util.PlayerWithHighestBidLied
@@ -25,13 +25,12 @@ import de.htwg.se.dicepoker.util.WelcomeMsg
 import de.htwg.se.dicepoker.util.EnterPlayerName
 import de.htwg.se.dicepoker.util.LetShowBegin
 import de.htwg.se.dicepoker.util.LineSeparator
-import scala.swing.event.Event
-import scala.swing.Reactor
 
-class Tui(controller: DPController) extends Reactor {
+
+class Tui(controller: DPController) extends Observer {
   val tui = AppConst.tui_symbol_inFrontOfText
-  listenTo(controller)
-  //  controller.add(this)
+//  listenTo(controller)
+    controller.add(this)
   controller.createPlayers
 
   def processInputLine() = {
@@ -40,113 +39,113 @@ class Tui(controller: DPController) extends Reactor {
 
   def readLine = scala.io.StdIn.readLine()
 
-  reactions += {
+//  reactions += {
+//
+//    case event:WelcomeMsg => println("Welcome to €€ DICE POKER €€!")
+//    case EnterPlayerName => {
+//      val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
+//      println("Hello Player " + index + EOL + "Please enter your name:")
+//      val name = readLine
+//      controller.setUserInteraction(name)
+//      println()
+//    }
+//    case LetShowBegin    => println("Alright, let the show begin...")
+//    case ExplainCommands => println(tui + "start game: 's' | exit game: 'q' | restart: 'r'")
+//    case DiceWereRollen  => println(EOL + controller.printTable)
+//    case PlayerHasWonRound => {
+//      val winner = controller.playerName(PlayerHasWonRound.attachment.asInstanceOf[Player])
+//      println(tui + winner + " has won this round!" + EOL + "_________________________________________")
+//    }
+//    case PlayerWithHighestBidLied => println(tui + controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + ".")
+//    case PlayerWithHighestBidNotLied => {
+//      val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
+//      println(tui + controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + ".")
+//    }
+//    case NewRound        => println(tui + "New Round")
+//    case DeclareFirstBid => println(tui + controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):")
+//    case LineSeparator   => println("->->->->->->->->->->->->")
+//    case Input => {
+//      val input = readLine
+//      controller.setUserInteraction(input)
+//    }
+//    case AskIfMistrusts => {
+//      println()
+//      println(tui + "Highest bid at the moment = " + controller.getHighestBidResult)
+//      println(tui + "Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer)))
+//      println(tui + "Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?")
+//      println(tui + "mistrust: 'm' | setHigherBid: 'b'")
+//      val input = readLine
+//      controller.setUserInteraction(input)
+//    }
+//    case PrintPlayer => {
+//      val player: Player = PrintPlayer.attachment.asInstanceOf[Player]
+//      println(controller.printPlayer(player))
+//    }
+//    case RequestHigherBid => {
+//      val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
+//      println(tui + controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :")
+//    }
+//    case GameIsOver => {
+//      val winner = controller.playerName(GameIsOver.attachment.asInstanceOf[Player])
+//      println(tui + "...and the winner is " + winner + "!")
+//      println(tui + "Congratulations, " + winner + "!")
+//    }
+//    case GameWasCancelled => println(tui + "The game is over. See you soon!")
+//
+//  }
 
-    case event:WelcomeMsg => println("Welcome to €€ DICE POKER €€!")
-    case EnterPlayerName => {
-      val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
-      println("Hello Player " + index + EOL + "Please enter your name:")
-      val name = readLine
-      controller.setUserInteraction(name)
-      println()
+    override def update(e: Event): Unit = {
+      e match {
+        case WelcomeMsg => println("Welcome to €€ DICE POKER €€!")
+        case EnterPlayerName => {
+          val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
+          println("Hello Player " + index + EOL + "Please enter your name:")
+          val name = readLine
+          controller.setUserInteraction(name)
+          println()
+        }
+        case LetShowBegin => println("Alright, let the show begin...")
+        case ExplainCommands => println(tui + "start game: 's' | exit game: 'q' | restart: 'r'")
+        case DiceWereRollen => println(EOL + controller.printTable)
+        case PlayerHasWonRound => {
+          val winner = controller.playerName(PlayerHasWonRound.attachment.asInstanceOf[Player])
+          println(tui + winner + " has won this round!" + EOL + "_________________________________________")
+        }
+        case PlayerWithHighestBidLied => println(tui + controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + ".")
+        case PlayerWithHighestBidNotLied => {
+          val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
+          println(tui + controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + ".")
+        }
+        case NewRound => println(tui + "New Round")
+        case DeclareFirstBid => println(tui + controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):")
+        case LineSeparator => println("->->->->->->->->->->->->")
+        case Input => {
+          val input = readLine
+          controller.setUserInteraction(input)
+        }
+        case AskIfMistrusts => {
+          println()
+          println(tui + "Highest bid at the moment = " + controller.getHighestBidResult)
+          println(tui + "Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer)))
+          println(tui + "Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?")
+          println(tui + "mistrust: 'm' | setHigherBid: 'b'")
+          val input = readLine
+          controller.setUserInteraction(input)
+        }
+        case PrintPlayer => {
+          val player: Player = PrintPlayer.attachment.asInstanceOf[Player]
+          println(controller.printPlayer(player))
+        }
+        case RequestHigherBid => {
+          val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
+          println(tui + controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :")
+        }
+        case GameIsOver => {
+          val winner = controller.playerName(GameIsOver.attachment.asInstanceOf[Player])
+          println(tui + "...and the winner is " + winner + "!")
+          println(tui + "Congratulations, " + winner + "!")
+        }
+        case GameWasCancelled => println(tui + "The game is over. See you soon!")
+      }
     }
-    case LetShowBegin    => println("Alright, let the show begin...")
-    case ExplainCommands => println(tui + "start game: 's' | exit game: 'q' | restart: 'r'")
-    case DiceWereRollen  => println(EOL + controller.printTable)
-    case PlayerHasWonRound => {
-      val winner = controller.playerName(PlayerHasWonRound.attachment.asInstanceOf[Player])
-      println(tui + winner + " has won this round!" + EOL + "_________________________________________")
-    }
-    case PlayerWithHighestBidLied => println(tui + controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + ".")
-    case PlayerWithHighestBidNotLied => {
-      val winner = controller.whichPlayerFollows(controller.getLastLoser)
-      println(tui + controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + ".")
-    }
-    case NewRound        => println(tui + "New Round")
-    case DeclareFirstBid => println(tui + controller.playerName(controller.getPlayerStarted) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):")
-    case LineSeparator   => println("->->->->->->->->->->->->")
-    case Input => {
-      val input = readLine
-      controller.setUserInteraction(input)
-    }
-    case AskIfMistrusts => {
-      println()
-      println(tui + "Highest bid at the moment = " + controller.getHighestBidResult)
-      println(tui + "Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer)))
-      println(tui + "Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?")
-      println(tui + "mistrust: 'm' | setHigherBid: 'b'")
-      val input = readLine
-      controller.setUserInteraction(input)
-    }
-    case PrintPlayer => {
-      val player: Player = PrintPlayer.attachment.asInstanceOf[Player]
-      println(controller.printPlayer(player))
-    }
-    case RequestHigherBid => {
-      val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
-      println(tui + controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :")
-    }
-    case GameIsOver => {
-      val winner = controller.playerName(GameIsOver.attachment.asInstanceOf[Player])
-      println(tui + "...and the winner is " + winner + "!")
-      println(tui + "Congratulations, " + winner + "!")
-    }
-    case GameWasCancelled => println(tui + "The game is over. See you soon!")
-
-  }
-
-  //  override def update(e: Event): Unit = {
-  //    e match {
-  //      case WelcomeMsg => println("Welcome to €€ DICE POKER €€!")
-  //      case EnterPlayerName => {
-  //        val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
-  //        println("Hello Player " + index + EOL + "Please enter your name:")
-  //        val name = readLine
-  //        controller.setUserInteraction(name)
-  //        println()
-  //      }
-  //      case LetShowBegin => println("Alright, let the show begin...")
-  //      case ExplainCommands => println(tui + "start game: 's' | exit game: 'q' | restart: 'r'")
-  //      case DiceWereRollen => println(EOL + controller.printTable)
-  //      case PlayerHasWonRound => {
-  //        val winner = controller.playerName(PlayerHasWonRound.attachment.asInstanceOf[Player])
-  //        println(tui + winner + " has won this round!" + EOL + "_________________________________________")
-  //      }
-  //      case PlayerWithHighestBidLied => println(tui + controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + ".")
-  //      case PlayerWithHighestBidNotLied => {
-  //        val winner = controller.whichPlayerFollows(controller.getLastLoser)
-  //        println(tui + controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + ".")
-  //      }
-  //      case NewRound => println(tui + "New Round")
-  //      case DeclareFirstBid => println(tui + controller.playerName(controller.getPlayerStarted) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):")
-  //      case LineSeparator => println("->->->->->->->->->->->->")
-  //      case Input => {
-  //        val input = readLine
-  //        controller.setUserInteraction(input)
-  //      }
-  //      case AskIfMistrusts => {
-  //        println()
-  //        println(tui + "Highest bid at the moment = " + controller.getHighestBidResult)
-  //        println(tui + "Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer)))
-  //        println(tui + "Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?")
-  //        println(tui + "mistrust: 'm' | setHigherBid: 'b'")
-  //        val input = readLine
-  //        controller.setUserInteraction(input)
-  //      }
-  //      case PrintPlayer => {
-  //        val player: Player = PrintPlayer.attachment.asInstanceOf[Player]
-  //        println(controller.printPlayer(player))
-  //      }
-  //      case RequestHigherBid => {
-  //        val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
-  //        println(tui + controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :")
-  //      }
-  //      case GameIsOver => {
-  //        val winner = controller.playerName(GameIsOver.attachment.asInstanceOf[Player])
-  //        println(tui + "...and the winner is " + winner + "!")
-  //        println(tui + "Congratulations, " + winner + "!")
-  //      }
-  //      case GameWasCancelled => println(tui + "The game is over. See you soon!")
-  //    }
-  //  }
 }
