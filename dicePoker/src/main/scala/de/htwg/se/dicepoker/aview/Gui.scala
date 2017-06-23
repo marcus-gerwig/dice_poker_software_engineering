@@ -1,6 +1,5 @@
 package de.htwg.se.dicepoker.aview
 
-import scala.swing._
 //import scala.swing.event._
 import de.htwg.se.dicepoker.controller.DPController
 import javax.swing.text.html.FrameSetView
@@ -18,6 +17,7 @@ import scala.compat.Platform.EOL
 import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util._
 
+//noinspection ScalaStyle
 class Gui(controller: DPController) extends Frame with Observer {
 
   //  listenTo(controller)
@@ -105,7 +105,7 @@ class Gui(controller: DPController) extends Frame with Observer {
       case PlayerWithHighestBidLied => new FlowPanel(new Label(controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + "."), new Button(Action("Continue") {}))
       case PlayerWithHighestBidNotLied => {
         val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
-        new FlowPanel(new Label(controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + "."), new Button(Action("Continue") {}))
+        new FlowPanel(new Label(controller.playerName(winner.get) + " did not lie. His actual result was " + controller.playerResult(winner.get) + "."), new Button(Action("Continue") {}))
       }
       case NewRound => new FlowPanel(new Label("New Round"), new Button(Action("Continue") {}))
       case DeclareFirstBid => new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):"), bidInput, new Button(Action("Continue") { /*controller.setUserInteraction(bidInput.text)*/ }))
@@ -114,7 +114,7 @@ class Gui(controller: DPController) extends Frame with Observer {
       case AskIfMistrusts => {
 
         new FlowPanel(new Label("Highest bid at the moment = " + controller.getHighestBidResult), new Button(Action("Continue") {}))
-        new FlowPanel(new Label("Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer))), new Button(Action("Continue") {}))
+        new FlowPanel(new Label("Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer).get)), new Button(Action("Continue") {}))
         new FlowPanel(new Label("Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?"), new Button(Action("Mistrust") { /*controller.setUserInteraction("m")*/ }), new Button(Action("Set Higher Bid") { /*controller.setUserInteraction("b")*/ }))
 
       }

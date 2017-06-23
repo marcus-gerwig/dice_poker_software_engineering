@@ -43,7 +43,7 @@ class Tui(controller: DPController) extends Observer {
       case PlayerWithHighestBidLied => println(tui + controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + ".")
       case PlayerWithHighestBidNotLied => {
         val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
-        println(tui + controller.playerName(winner) + " did not lie. His actual result was " + controller.playerResult(winner) + ".")
+        println(tui + controller.playerName(winner.get) + " did not lie. His actual result was " + controller.playerResult(winner.get) + ".")
       }
       case NewRound => println(tui + "New Round")
       case DeclareFirstBid => {
@@ -65,13 +65,13 @@ class Tui(controller: DPController) extends Observer {
         val playerFoll = controller.whichPlayerFollows(controller.getHighestBidPlayer)
         println()
         println(tui + "Highest bid at the moment = " + controller.getHighestBidResult)
-        println(tui + "Now it's your turn " + controller.playerName(playerFoll))
+        println(tui + "Now it's your turn " + controller.playerName(playerFoll.get))
         println(tui + "Do you mistrust " + controller.playerName(playerHigh) + " or do you want to set a higher bid?")
         println(tui + "mistrust: 'm' | setHigherBid: 'b'")
         val input = readLine
         input match {
           case "m" => controller.playerMistrusts
-          case "b" => controller.playerRaisesBid(playerFoll)
+          case "b" => controller.playerRaisesBid(playerFoll.get)
         }
       }
       case PrintPlayer => {
