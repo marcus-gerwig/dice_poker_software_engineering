@@ -1,10 +1,12 @@
 package de.htwg.se.dicepoker.controller
 
-import de.htwg.se.dicepoker.model.{ Bid, Player, PokerTable, Round }
+import de.htwg.se.dicepoker.model.{Bid, Player, PokerTable, Round}
 import de.htwg.se.dicepoker.util._
 
+import scala.swing.Publisher
+
 //noinspection ScalaStyle
-class DPController(var table: PokerTable) extends Observable {
+class DPController(var table: PokerTable) extends Observable{
 
   var lastLoser: Option[Player] = None
   var playerStarted: Option[Player] = None
@@ -22,7 +24,7 @@ class DPController(var table: PokerTable) extends Observable {
       EnterPlayerName.set(index)
       notifyObservers(EnterPlayerName)
     }
-    notifyObservers(LetShowBegin)
+
   }
 
   def menuNavigation = {
@@ -31,6 +33,7 @@ class DPController(var table: PokerTable) extends Observable {
   }
 
   def startGame = {
+    notifyObservers(LetShowBegin)
     while (!gameIsOver) newRound
     val winner = whoWonTheGame
     GameIsOver.set(winner)

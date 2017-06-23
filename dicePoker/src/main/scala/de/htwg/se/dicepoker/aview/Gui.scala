@@ -1,8 +1,9 @@
 package de.htwg.se.dicepoker.aview
 
-//import scala.swing.event._
+import scala.swing.event._
 import de.htwg.se.dicepoker.controller.DPController
 import javax.swing.text.html.FrameSetView
+
 import scala.swing.Alignment
 import scala.swing.Frame
 import scala.swing.GridPanel
@@ -10,9 +11,12 @@ import scala.swing.Label
 import scala.swing.TextField
 import scala.swing._
 import javax.swing.ImageIcon
-import de.htwg.se.dicepoker.model.{ PokerTable, Player, Bid, Round }
+
+import de.htwg.se.dicepoker.model.{Bid, Player, PokerTable, Round}
+
 import scala.language.postfixOps
 import de.htwg.se.dicepoker.util.Observer
+
 import scala.compat.Platform.EOL
 import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util._
@@ -20,32 +24,35 @@ import de.htwg.se.dicepoker.util._
 //noinspection ScalaStyle
 class Gui(controller: DPController) extends Frame with Observer {
 
-  //  listenTo(controller)
   title = "Dice Poker"
   controller.add(this)
 
-  controller.createPlayers
-
   def processInputLine() = {
-
     controller.menuNavigation
   }
 
-  //  val button1 = new Button(Action("Start 2 Player Game") { })
-  //  val button2 = new Button(Action("Quit") { System.exit(0) })
-  //  
-  //  contents = new BoxPanel(Orientation.Horizontal) {
-  //    
-  //    contents += button1
-  //    contents += button2
-  //    centerOnScreen
-  //  }
-  //  
-  //  listenTo(button1)
-  //  reactions += {
-  //  case ButtonClicked(`button1`) => controller.createPlayers
-  //  
-  //  }
+  menuBar = new MenuBar {
+    contents += new Menu("File") {
+      contents += new MenuItem(Action("Quit") {
+        System.exit(0)
+      })
+      centerOnScreen
+      visible = true
+    }
+  }
+
+  val startButton = new Button(Action("Start 2 Players Game") {
+    update(WelcomeMsg)
+    update(EnterPlayerName)
+  })
+  val quitButton = new Button(Action("Quit") {
+    System.exit(0)
+  })
+  contents = new FlowPanel() {
+    contents += startButton
+    contents += quitButton
+  }
+
 
   def newIField = new TextField {
     text = "Bid"
@@ -69,23 +76,29 @@ class Gui(controller: DPController) extends Frame with Observer {
 
       case WelcomeMsg =>
         println("GUI is starting")
-        menuBar = new MenuBar {
-          contents += new Menu("File") {
-            contents += new MenuItem(Action("Quit") { System.exit(0) })
-            centerOnScreen
-            visible = true
-          }
-        }
 
       case EnterPlayerName => {
         val namePlayer = newTField
         val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
-        contents = new FlowPanel(new Label(" Hello Player " + index + " Please enter your name: "), namePlayer, new Button(Action("Continue") { println(namePlayer.text) /*controller.setUserInteraction(namePlayer.text)*/ ; println(namePlayer.text) })) {
+        val labelPlayer1 = new Label("Hello Player 1! Please enter your name: ")
+        val labelPlayer2 = new Label("Hello Player 2! Please enter your name: ")
+        val namePlayer1 = newTField
+        val namePlayer2 = newTField
+        val commitButton = new Button(Action("Continue") {
+          controller.setPlayerName(1,namePlayer1.text)
+          controller.setPlayerName(2, namePlayer2.text)
+        })
+        contents = new FlowPanel(new Label(" Hello Player " + index + " Please enter your name: "), namePlayer, new Button(Action("Continue") {
+          println(namePlayer.text) /*controller.setUserInteraction(namePlayer.text)*/ ;
+          println(namePlayer.text)
+        })) {
           border = Swing.EmptyBorder(15, 10, 10, 10)
           centerOnScreen
           visible = true
-          //        listenTo(nameButton)
+          contents += labelPlayer1
         }
+
+
 
       }
       case LetShowBegin => println("Spielstart")
@@ -108,14 +121,20 @@ class Gui(controller: DPController) extends Frame with Observer {
         new FlowPanel(new Label(controller.playerName(winner.get) + " did not lie. His actual result was " + controller.playerResult(winner.get) + "."), new Button(Action("Continue") {}))
       }
       case NewRound => new FlowPanel(new Label("New Round"), new Button(Action("Continue") {}))
-      case DeclareFirstBid => new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):"), bidInput, new Button(Action("Continue") { /*controller.setUserInteraction(bidInput.text)*/ }))
+      case DeclareFirstBid => new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):"), bidInput, new Button(Action("Continue") {
+        /*controller.setUserInteraction(bidInput.text)*/
+      }))
       case LineSeparator =>
       case Input =>
       case AskIfMistrusts => {
 
         new FlowPanel(new Label("Highest bid at the moment = " + controller.getHighestBidResult), new Button(Action("Continue") {}))
         new FlowPanel(new Label("Now it's your turn " + controller.playerName(controller.whichPlayerFollows(controller.getHighestBidPlayer).get)), new Button(Action("Continue") {}))
-        new FlowPanel(new Label("Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?"), new Button(Action("Mistrust") { /*controller.setUserInteraction("m")*/ }), new Button(Action("Set Higher Bid") { /*controller.setUserInteraction("b")*/ }))
+        new FlowPanel(new Label("Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?"), new Button(Action("Mistrust") {
+          /*controller.setUserInteraction("m")*/
+        }), new Button(Action("Set Higher Bid") {
+          /*controller.setUserInteraction("b")*/
+        }))
 
       }
       case PrintPlayer => {
@@ -124,17 +143,24 @@ class Gui(controller: DPController) extends Frame with Observer {
       }
       case RequestHigherBid => {
         val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
-        new FlowPanel(new Label(controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :"), bidInput, new Button(Action("Continue") { /*controller.setUserInteraction(bidInput.text)*/ }))
+        new FlowPanel(new Label(controller.playerName(player) + ", please declare a higher bid than " + controller.getHighestBidResult + " :"), bidInput, new Button(Action("Continue") {
+          /*controller.setUserInteraction(bidInput.text)*/
+        }))
       }
       case GameIsOver => {
         val winner = controller.playerName(GameIsOver.attachment.asInstanceOf[Player])
-        new FlowPanel(new Label("...and the winner is " + winner + "!  " + "Congratulations, " + winner + "!"), new Button(Action("Restart") { controller.createPlayers }), new Button(Action("Quit") { System.exit(0) }))
+        new FlowPanel(new Label("...and the winner is " + winner + "!  " + "Congratulations, " + winner + "!"), new Button(Action("Restart") {
+          controller.createPlayers
+        }), new Button(Action("Quit") {
+          System.exit(0)
+        }))
 
       }
       case GameWasCancelled =>
 
     }
   }
+
   //  def nextScreen(methodName: String) =
   //    playerNameInput
   //    System.exit(0)
@@ -258,7 +284,9 @@ class Gui(controller: DPController) extends Frame with Observer {
       case _ => picPath = getClass.getResource("/Empty.png")
     }
 
-    val pic = new Label { icon = new ImageIcon(picPath) }
+    val pic = new Label {
+      icon = new ImageIcon(picPath)
+    }
     pic
   }
 
