@@ -37,19 +37,18 @@ class DPController(var table: PokerTable) extends Observable {
     newRound
   }
 
-  def finishGameIfOver: Unit = {
-    if (gameIsOver) {
-      val winner = whoWonTheGame
-      GameIsOver.set(winner)
-      notifyObservers(GameIsOver)
-      notifyObservers(GameWasCancelled)
-    }
-  }
 
   def newRound: Unit = {
     rolling
+    /*playerStarted = whichPlayerStarts
+    playerFollowed = whichPlayerFollows(playerStarted.get)*/
+  }
+
+  def rolling: Unit = {
+    table = table.rollTheDice
     playerStarted = whichPlayerStarts
     playerFollowed = whichPlayerFollows(playerStarted.get)
+    notifyObservers(DiceWereRollen)
   }
 
   def beginRound: Unit = {
@@ -57,10 +56,6 @@ class DPController(var table: PokerTable) extends Observable {
     notifyObservers(DeclareFirstBid)
   }
 
-  def rolling: Unit = {
-    table = table.rollTheDice
-    notifyObservers(DiceWereRollen)
-  }
 
   def continue: Unit = {
     notifyObservers(AskIfMistrusts)
@@ -73,7 +68,7 @@ class DPController(var table: PokerTable) extends Observable {
     else {
       RequestHigherBid.set(playerRaises)
       notifyObservers(RequestHigherBid)
-      continue
+      //continue
     }
   }
 
@@ -83,8 +78,19 @@ class DPController(var table: PokerTable) extends Observable {
     if (lastLoser.get.equals(currentRound.get.highestBid.bidPlayer)) notifyObservers(PlayerWithHighestBidLied)
     else notifyObservers(PlayerWithHighestBidNotLied)
     PlayerHasWonRound.set(roundWinner)
-    notifyObservers(PlayerHasWonRound)
-    finishGameIfOver
+    if (!finishGameIfOver)
+      notifyObservers(PlayerHasWonRound)
+
+  }
+
+  def finishGameIfOver: Boolean = {
+    if (gameIsOver) {
+      val winner = whoWonTheGame
+      GameIsOver.set(winner)
+      notifyObservers(GameIsOver)
+      notifyObservers(GameWasCancelled)
+      true
+    } else false
   }
 
   def newPlayer(name: String): Player = new Player(name)
@@ -139,11 +145,24 @@ class DPController(var table: PokerTable) extends Observable {
   }
 
   def setPlayerName(index: Int, name: String) = {
-    if (table == null) table = new PokerTable(Vector.empty)
-    var currPlayer: Vector[Player] = table.players
-    val newPlayer: Player = new Player(name)
-    currPlayer = currPlayer :+ newPlayer
-    table = table.updateTable(currPlayer)
+    var currPlayers: Vector[Player] = Vector.empty
+    if (table == null || table.players.length < AppConst.number_of_player) {
+      if (table == null) table = new PokerTable(Vector.empty)
+      currPlayers = table.players
+      val newPlayer: Player = new Player(name)
+      currPlayers = currPlayers :+ newPlayer
+    } else {
+      currPlayers = table.players
+      currPlayers = currPlayers.updated(index, new Player(name))
+    }
+    table = table.updateTable(currPlayers)
+  }
+
+  def restartGame = {
+    lastLoser = None
+    var names: Vector[String] = Vector.empty
+    table.players.map { p => names = names :+ p.name }
+    for (index <- 0 until AppConst.number_of_player) setPlayerName(index, names(index))
   }
 
   def declareFirstBid(firstBid: String): Unit = {
@@ -157,8 +176,9 @@ class DPController(var table: PokerTable) extends Observable {
 
   def declareHigherBid(higherBid: String, playerRaises: Player): Unit = {
     if (inputIsValid(higherBid, playerRaises) && newBidIsHigher(higherBid)) {
-      var bid = newBid(higherBid, playerRaises)
+      val bid = newBid(higherBid, playerRaises)
       raiseHighestBid(bid)
+      continue
     } else notifyObservers(RequestHigherBid)
   }
 

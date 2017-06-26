@@ -35,10 +35,14 @@ class Tui(controller: DPController) extends Observer {
       }
       case LetShowBegin => println("Alright, let the show begin...")
       case ExplainCommands => println(tui + "start game: 's' | exit game: 'q' | restart: 'r'")
-      case DiceWereRollen => println(EOL + controller.printTable)
+      case DiceWereRollen => {
+        println(EOL + controller.printTable)
+        controller.beginRound
+      }
       case PlayerHasWonRound => {
         val winner = controller.playerName(PlayerHasWonRound.attachment.asInstanceOf[Player])
         println(tui + winner + " has won this round!" + EOL + "_________________________________________")
+        controller.newRound
       }
       case PlayerWithHighestBidLied => println(tui + controller.playerName(controller.getHighestBidPlayer) + " lied. His actual result was " + controller.playerResult(controller.getHighestBidPlayer) + ".")
       case PlayerWithHighestBidNotLied => {
@@ -47,7 +51,7 @@ class Tui(controller: DPController) extends Observer {
       }
       case NewRound => println(tui + "New Round")
       case DeclareFirstBid => {
-        println(tui + controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 /means your bid is a double of 3):")
+        println(tui + controller.playerName(controller.getPlayerStarted.get) + ", please declare the first bid (e.g. 3,2 means your bid is a double of 3):")
         val input = readLine
         controller.declareFirstBid(input)
       }
@@ -89,7 +93,10 @@ class Tui(controller: DPController) extends Observer {
         println(tui + "...and the winner is " + winner + "!")
         println(tui + "Congratulations, " + winner + "!")
       }
-      case GameWasCancelled => println(tui + "The game is over. See you soon!")
+      case GameWasCancelled => {
+        println(tui + "The game is over. See you soon!")
+
+      }
     }
   }
 }
