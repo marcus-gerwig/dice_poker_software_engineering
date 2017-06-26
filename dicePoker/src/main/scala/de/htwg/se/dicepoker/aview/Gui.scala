@@ -28,6 +28,7 @@ class Gui(controller: DPController) extends Frame with Observer {
   minimumSize = new Dimension(300, 100)
   controller.add(this)
   var roundNr = 1
+
   def setFont = new Font("Bodoni MT", 0, 20)
 
 
@@ -53,7 +54,7 @@ class Gui(controller: DPController) extends Frame with Observer {
     contents += quitButton
   }
 
-  def newLabel(newText: String):Label = new Label {
+  def newLabel(newText: String): Label = new Label {
     text = newText
     font = setFont
   }
@@ -123,12 +124,12 @@ class Gui(controller: DPController) extends Frame with Observer {
               contents += new BoxPanel(Orientation.Horizontal) {
 
                 contents += newLabel(controller.playerName(player1) + ": ")
-                for(i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
+                for (i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
                 contents += newLabel(controller.playerName(player2) + ": ")
-                for(i <- 0 until player2.diceCount) yield contents += picSelection(i, player2)
+                for (i <- 0 until player2.diceCount) yield contents += picSelection(i, player2)
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -151,7 +152,7 @@ class Gui(controller: DPController) extends Frame with Observer {
               contents += picSelection(1, playerStarted)
               contents += picSelection(1, playerStarted)*/
                 contents += newLabel(controller.playerName(player1) + ": ")
-                for(i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
+                for (i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
                 /*for (index <- 0 until player1.diceCount) {
                   contents += newLabel("" + player1.diceCup.dieCombi(index))
                   contents += Swing.HStrut(5)
@@ -161,7 +162,7 @@ class Gui(controller: DPController) extends Frame with Observer {
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
                 contents += newLabel(controller.playerName(player2) + ": ")
-                for(i <- 0 until player2.diceCount) yield contents += picSelection(i, player2)
+                for (i <- 0 until player2.diceCount) yield contents += picSelection(i, player2)
                 /*for (index <- 0 until player2.diceCount) {
                   contents += newLabel("" + player2.diceCup.dieCombi(index))
                   contents += Swing.HStrut(5)
@@ -177,7 +178,7 @@ class Gui(controller: DPController) extends Frame with Observer {
           }
         }
 
-      case NewRound => title = "Round Nr."+roundNr
+      case NewRound => title = "Round Nr." + roundNr
       case DeclareFirstBid =>
         controller.getPlayerStarted match {
           case None =>
@@ -189,7 +190,7 @@ class Gui(controller: DPController) extends Frame with Observer {
               contents += new BoxPanel(Orientation.Horizontal) {
                 contents += newLabel(controller.playerName(playerStarted) + ": ")
                 contents += Swing.HStrut(5)
-                for(i <- 0 until playerStarted.diceCount) yield contents += picSelection(i, playerStarted)
+                for (i <- 0 until playerStarted.diceCount) yield contents += picSelection(i, playerStarted)
                 /*for (index <- 0 until playerStarted.diceCount) {
                   contents += newLabel("" + playerStarted.diceCup.dieCombi(index))
                   contents += Swing.HStrut(5)
@@ -223,7 +224,7 @@ class Gui(controller: DPController) extends Frame with Observer {
           contents += new BoxPanel(Orientation.Horizontal) {
             contents += newLabel("Highest bid at the moment from " + controller.playerName(playerWithHighestBid) + " = ")
             contents += Swing.HStrut(5)
-            for(i <- 0 until controller.getHighestBidResult.frequency) yield contents += picSelection(i, controller.getHighestBidResult)
+            for (i <- 0 until controller.getHighestBidResult.frequency) yield contents += picSelection(i, controller.getHighestBidResult)
 
           }
           contents += Swing.VStrut(10)
@@ -260,7 +261,7 @@ class Gui(controller: DPController) extends Frame with Observer {
           contents += new BoxPanel(Orientation.Horizontal) {
             contents += newLabel(controller.playerName(player) + ": ")
             contents += Swing.HStrut(5)
-            for(i <- 0 until player.diceCount) yield contents += picSelection(i, player)
+            for (i <- 0 until player.diceCount) yield contents += picSelection(i, player)
             /*for (index <- 0 until player.diceCount) {
               contents += newLabel("" + player.diceCup.dieCombi(index))
               contents += Swing.HStrut(5)
@@ -285,7 +286,7 @@ class Gui(controller: DPController) extends Frame with Observer {
         }
       }
       case PlayerWithHighestBidLied => {
-        roundNr +=1
+        roundNr += 1
         val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
         val winnerName = controller.playerName(winner.get)
         val loser = controller.getLastLoser.get
@@ -310,7 +311,7 @@ class Gui(controller: DPController) extends Frame with Observer {
         }
       }
       case PlayerWithHighestBidNotLied => {
-        roundNr +=1
+        roundNr += 1
         val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
         val winnerName = controller.playerName(winner.get)
         contents = new BoxPanel(Orientation.Vertical) {
@@ -372,82 +373,7 @@ class Gui(controller: DPController) extends Frame with Observer {
     }
   }
 
-  //  val pic1 = new Label {
-  //    icon = new ImageIcon("C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl1.png")
-  //  }
-  //  val pic2 = new Label {
-  //    icon = new ImageIcon("C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl2.png")
-  //  }
-  //  val pic3 = new Label {
-  //    icon = new ImageIcon("C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl3.png")
-  //  }
-  //  val pic4 = new Label {
-  //    icon = new ImageIcon("C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl4.png")
-  //  }
-  //  val pic5 = new Label {
-  //    icon = new ImageIcon("C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl5.png")
-  //  }
-  //  val pic6 = new Label {
-  //    icon = new ImageIcon("C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl6.png")
-  //  }
-
-  //  def round = contents = new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted) + " your throw: " + controller.getPlayerStarted.diceCup.toString()), picSelectionStart(0), picSelectionStart(1), picSelectionStart(2), new Button(Action("Continue") { declareBid }))
-  //
-  //  def picSelectionStart(i: Int): Label = {
-  //
-  //    var picPath: java.net.URL = null
-  //
-  //    val picList = List[Label]()
-  //
-  //    val d = controller.getPlayerStarted.diceCup.dieCombi(i)
-  //
-  //      d match {
-  //        case 1 => picPath=getClass.getResource("/Zahl1.png")
-  //        case 2 => picPath=getClass.getResource("/Zahl2.png")
-  //        case 3 => picPath=getClass.getResource("/Zahl3.png")
-  //        case 4 => picPath=getClass.getResource("/Zahl4.png")
-  //        case 5 => picPath=getClass.getResource("/Zahl5.png")
-  //        case 6 => picPath=getClass.getResource("/Zahl6.png")
-  //        case _ => picPath = getClass.getResource("/Empty.png")
-  //      }
-  //
-  //
-  //    val pic = new Label { icon = new ImageIcon(picPath) }
-  //    pic
-  //  }
-  //
-  //  def picSelectionFollows: Label = {
-  //
-  //    var picPath = ""
-  //
-  //    for (d <- controller.getPlayerFollowed.diceCup.dieCombi) {
-  //
-  //      d match {
-  //        case 1 => picPath = "C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl1.png"
-  //        case 2 => picPath = "C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl2.png"
-  //        case 3 => picPath = "C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl3.png"
-  //        case 4 => picPath = "C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl4.png"
-  //        case 5 => picPath = "C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl5.png"
-  //        case 6 => picPath = "C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl6.png"
-  //        case _ =>
-  //      }
-  //    }
-  //    val pic = new Label { icon = new ImageIcon(picPath) }
-  //    pic
-  //  }
-  //
-  //  def newIField = new TextField {
-  //    text = "Bid"
-  //    columns = 3
-  //    horizontalAlignment = Alignment.Right
-  //  }
-  //
-  //  val bidInput = newIField
-  //
-  //  def declareBid = contents = new FlowPanel(new Label(controller.playerName(controller.getPlayerStarted) + " declare your bid (e.g. 3,2 /means your bid is a double of 3): "), bidInput, new Button(Action("Continue") { askIfMistrusts }))
-  //
-  //  def askIfMistrusts = contents = new FlowPanel(new Label("Highest bid at the moment = " + controller.getHighestBidResult + "Do you mistrust " + controller.playerName(controller.getHighestBidPlayer) + " or do you want to set a higher bid?"), new Button(Action("Set higher Bid") { controller.setUserInteraction("b") }), new Button(Action("Mistrust") { controller.setUserInteraction("m") }))
-
+  
   def picSelection(i: Int, p: Player): Label = {
 
     var picPath: java.net.URL = null
