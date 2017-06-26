@@ -9,7 +9,6 @@ import scala.compat.Platform.EOL
 //noinspection ScalaStyle
 class Tui(controller: DPController) extends Observer {
   val tui = AppConst.tui_symbol_inFrontOfText
-  //  listenTo(controller)
   controller.add(this)
   controller.createPlayers
 

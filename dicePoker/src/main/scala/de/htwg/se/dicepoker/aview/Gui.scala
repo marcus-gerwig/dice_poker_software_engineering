@@ -1,19 +1,14 @@
 package de.htwg.se.dicepoker.aview
 
-import scala.swing.event._
+
 import de.htwg.se.dicepoker.controller.DPController
-import javax.swing.text.html.FrameSetView
-import java.io.InputStream
 
 import scala.swing.Alignment
 import scala.swing.Frame
-import scala.swing.GridPanel
 import scala.swing.Label
 import scala.swing.TextField
 import scala.swing._
 import javax.swing.ImageIcon
-import javax.swing.border.EmptyBorder
-import javax.imageio.ImageIO
 
 import Swing._
 import java.awt.Color
@@ -24,7 +19,6 @@ import de.htwg.se.dicepoker.model.{Bid, Player, PokerTable, Round}
 import scala.language.postfixOps
 import de.htwg.se.dicepoker.util.Observer
 
-import scala.compat.Platform.EOL
 import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util._
 
@@ -119,7 +113,6 @@ class Gui(controller: DPController) extends Frame with Observer {
             e.xLayoutAlignment = 0.0
         }
       }
-      case LetShowBegin => println("Spielstart")
       case ExplainCommands => controller.newRound
       case DiceWereRollen =>
         controller.getLastLoser match {
@@ -130,16 +123,16 @@ class Gui(controller: DPController) extends Frame with Observer {
             contents = new BoxPanel(Orientation.Vertical) {
               border = Swing.EmptyBorder(10, 10, 10, 10)
               contents += new BoxPanel(Orientation.Horizontal) {
-                //for(i <- 0 until playerStarted.diceCount) yield contents += picSelection(i, playerStarted)
+
+                contents += new Label(controller.playerName(player1) + ": ")
+                for(i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
                 /*contents += picSelection(0, playerStarted)
               contents += picSelection(1, playerStarted)
               contents += picSelection(1, playerStarted)*/
-                contents += new Label(controller.playerName(player1) + ": ")
-                for (index <- 0 until player1.diceCount) {
+                /*for (index <- 0 until player1.diceCount) {
                   contents += new Label("" + player1.diceCup.dieCombi(index))
                   contents += Swing.HStrut(5)
-                }
-
+                }*/
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -233,8 +226,6 @@ class Gui(controller: DPController) extends Frame with Observer {
             //new FlowPanel(new Label(playerStarted.name + ": "), picSelection(0, playerStarted), picSelection(1, playerStarted), picSelection(2, playerStarted), new Button(Action("Continue") {}))
           }
         }
-      case LineSeparator =>
-      case Input =>
       case AskIfMistrusts => {
         val player = controller.whichPlayerFollows(controller.getHighestBidPlayer).get
         val playerWithHighestBid = controller.getHighestBidPlayer
@@ -268,7 +259,6 @@ class Gui(controller: DPController) extends Frame with Observer {
             e.xLayoutAlignment = 0.0
         }
       }
-      case PrintPlayer =>
       case RequestHigherBid => {
         val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
         val playerWithHighestBid = controller.getHighestBidPlayer
@@ -306,7 +296,6 @@ class Gui(controller: DPController) extends Frame with Observer {
             e.xLayoutAlignment = 0.0
         }
       }
-      case PlayerHasWonRound =>
       case PlayerWithHighestBidLied => {
         roundNr +=1
         val winner = controller.whichPlayerFollows(controller.getLastLoser.get)
@@ -386,39 +375,14 @@ class Gui(controller: DPController) extends Frame with Observer {
           }
         }
       }
+      case Input =>
+      case LineSeparator =>
+      case PrintPlayer =>
+      case PlayerHasWonRound =>
       case GameWasCancelled =>
-
+      case LetShowBegin =>
     }
   }
-
-  //  def nextScreen(methodName: String) =
-  //    playerNameInput
-  //    System.exit(0)
-  //
-
-  //  def player1NameInput = contents = new FlowPanel(new Label(" Please enter Player 1's name:  "), namePlayer1, new Button(Action("Continue") { setNameP1(namePlayer1.text) })) {
-  //    border = Swing.EmptyBorder(15, 10, 10, 10)
-  //  }
-  //
-  //  def player2NameInput = contents = new FlowPanel(new Label(" Please enter Player 2's name:  "), namePlayer2, new Button(Action("Continue") { setNameP2(namePlayer2.text) })) {
-  //    border = Swing.EmptyBorder(15, 10, 10, 10)
-  //  }
-  //
-  //  def setNameP1(namePlayer1: String) = {
-  //    players = players :+ controller.newPlayer(namePlayer1)
-  //
-  //    player2NameInput
-  //  }
-  //
-  //  def setNameP2(namePlayer2: String) = {
-  //    players = players :+ controller.newPlayer(namePlayer2)
-  //
-  //    controller.createPlayers(players)
-  //
-  //    controller.newRoundGUI
-  //
-  //    round
-  //  }
 
   //  val pic1 = new Label {
   //    icon = new ImageIcon("C:\\Users\\andre\\Desktop\\Würfelwerte\\Zahl1.png")

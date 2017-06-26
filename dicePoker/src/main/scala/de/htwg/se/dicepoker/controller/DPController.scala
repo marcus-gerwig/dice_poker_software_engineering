@@ -3,8 +3,6 @@ package de.htwg.se.dicepoker.controller
 import de.htwg.se.dicepoker.model.{Bid, Player, PokerTable, Round}
 import de.htwg.se.dicepoker.util._
 
-import scala.swing.Publisher
-
 //noinspection ScalaStyle
 class DPController(var table: PokerTable) extends Observable {
 
@@ -40,15 +38,13 @@ class DPController(var table: PokerTable) extends Observable {
 
   def newRound: Unit = {
     rolling
-    /*playerStarted = whichPlayerStarts
-    playerFollowed = whichPlayerFollows(playerStarted.get)*/
+    notifyObservers(DiceWereRollen)
   }
 
   def rolling: Unit = {
     table = table.rollTheDice
     playerStarted = whichPlayerStarts
     playerFollowed = whichPlayerFollows(playerStarted.get)
-    notifyObservers(DiceWereRollen)
   }
 
   def beginRound: Unit = {
@@ -68,7 +64,6 @@ class DPController(var table: PokerTable) extends Observable {
     else {
       RequestHigherBid.set(playerRaises)
       notifyObservers(RequestHigherBid)
-      //continue
     }
   }
 
