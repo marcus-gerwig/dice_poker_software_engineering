@@ -6,7 +6,7 @@ import de.htwg.se.dicepoker.util._
 import scala.swing.Publisher
 
 //noinspection ScalaStyle
-class DPController(var table: PokerTable) extends Observable{
+class DPController(var table: PokerTable) extends Observable {
 
   var lastLoser: Option[Player] = None
   var playerStarted: Option[Player] = None
@@ -41,18 +41,22 @@ class DPController(var table: PokerTable) extends Observable{
     notifyObservers(GameWasCancelled)
   }
 
-  def rolling: Unit = {
-    table = table.rollTheDice
-    notifyObservers(DiceWereRollen)
-  }
-
   def newRound: Unit = {
     rolling
     playerStarted = whichPlayerStarts
     playerFollowed = whichPlayerFollows(playerStarted.get)
+/*    notifyObservers(NewRound)
+    notifyObservers(DeclareFirstBid)*/
+  }
 
+  def beginRound: Unit = {
     notifyObservers(NewRound)
     notifyObservers(DeclareFirstBid)
+  }
+
+  def rolling: Unit = {
+    table = table.rollTheDice
+    notifyObservers(DiceWereRollen)
   }
 
   def continue: Unit = {
@@ -131,7 +135,7 @@ class DPController(var table: PokerTable) extends Observable{
   }
 
   def setPlayerName(index: Int, name: String) = {
-    if(table == null) table = new PokerTable(Vector.empty)
+    if (table == null) table = new PokerTable(Vector.empty)
     var currPlayer: Vector[Player] = table.players
     val newPlayer: Player = new Player(name)
     currPlayer = currPlayer :+ newPlayer

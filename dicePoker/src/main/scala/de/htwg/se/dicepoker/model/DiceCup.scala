@@ -2,7 +2,7 @@
 
 package de.htwg.se.dicepoker.model
 import scala.util.Random
-
+//noinspection ScalaStyle
 case class DiceCup(dieCombi: List[Int]) {
 
   def this() = this(Nil)
