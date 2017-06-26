@@ -34,19 +34,22 @@ class DPController(var table: PokerTable) extends Observable {
 
   def startGame = {
     notifyObservers(LetShowBegin)
-    while (!gameIsOver) newRound
-    val winner = whoWonTheGame
-    GameIsOver.set(winner)
-    notifyObservers(GameIsOver)
-    notifyObservers(GameWasCancelled)
+    newRound
+  }
+
+  def finishGameIfOver: Unit = {
+    if (gameIsOver) {
+      val winner = whoWonTheGame
+      GameIsOver.set(winner)
+      notifyObservers(GameIsOver)
+      notifyObservers(GameWasCancelled)
+    }
   }
 
   def newRound: Unit = {
     rolling
     playerStarted = whichPlayerStarts
     playerFollowed = whichPlayerFollows(playerStarted.get)
-/*    notifyObservers(NewRound)
-    notifyObservers(DeclareFirstBid)*/
   }
 
   def beginRound: Unit = {
@@ -81,6 +84,7 @@ class DPController(var table: PokerTable) extends Observable {
     else notifyObservers(PlayerWithHighestBidNotLied)
     PlayerHasWonRound.set(roundWinner)
     notifyObservers(PlayerHasWonRound)
+    finishGameIfOver
   }
 
   def newPlayer(name: String): Player = new Player(name)

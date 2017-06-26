@@ -14,7 +14,6 @@ object DicePoker {
   def main(args: Array[String]): Unit = {
 
     //tui.processInputLine()
-    //gui.processInputLine()
 
   }
 }

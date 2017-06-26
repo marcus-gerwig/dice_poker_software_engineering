@@ -34,10 +34,6 @@ class Gui(controller: DPController) extends Frame with Observer {
   title = "Dice Poker"
   controller.add(this)
 
-  def processInputLine() = {
-    controller.menuNavigation
-  }
-
   menuBar = new MenuBar {
     contents += new Menu("File") {
       contents += new MenuItem(Action("Quit") {
@@ -122,7 +118,7 @@ class Gui(controller: DPController) extends Frame with Observer {
         }
       }
       case LetShowBegin => println("Spielstart")
-      case ExplainCommands => controller.newRound/*controller.startGame*/
+      case ExplainCommands => controller.newRound
       case DiceWereRollen => {
         contents = new BoxPanel(Orientation.Vertical) {
           contents += new BoxPanel(Orientation.Horizontal) {
@@ -134,11 +130,11 @@ class Gui(controller: DPController) extends Frame with Observer {
           contents += picSelection(1, playerStarted)
           contents += picSelection(1, playerStarted)
   */
-/*            contents += new Label("Hallo, es beginnt eine neue Runde")
-            contents += Swing.HStrut(5)
-            contents += new BoxPanel(Orientation.Horizontal) {
-              contents += new Button(Action("Continue") {})
-            }*/
+            /*            contents += new Label("Hallo, es beginnt eine neue Runde")
+                        contents += Swing.HStrut(5)
+                        contents += new BoxPanel(Orientation.Horizontal) {
+                          contents += new Button(Action("Continue") {})
+                        }*/
 
             contents += new Label("" + controller.table.players(1).diceCup.dieCombi(1))
             contents += new Label("" + controller.table.players(1).diceCup.dieCombi(2))
@@ -353,8 +349,6 @@ class Gui(controller: DPController) extends Frame with Observer {
       case _ => picPath = getClass.getResource("/Empty.png")
     }
 
-    //val photo1 = ImageIO.read(new File("photo.jpg"))
-    //val photi = ImageIO.read(inStream)
     val pic = new Label {
       icon = new ImageIcon(picPath)
     }
