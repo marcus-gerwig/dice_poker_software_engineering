@@ -14,11 +14,10 @@ import Swing._
 import java.awt.Color
 import java.net.URL
 
-import de.htwg.se.dicepoker.model.{Bid, Player, PokerTable, Round}
+import de.htwg.se.dicepoker.model._
 
 import scala.language.postfixOps
 import de.htwg.se.dicepoker.util.Observer
-
 import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util._
 
@@ -29,6 +28,8 @@ class Gui(controller: DPController) extends Frame with Observer {
   minimumSize = new Dimension(300, 100)
   controller.add(this)
   var roundNr = 1
+  def setFont = new Font("Bodoni MT", 0, 20)
+
 
   menuBar = new MenuBar {
     contents += new Menu("File") {
@@ -52,19 +53,16 @@ class Gui(controller: DPController) extends Frame with Observer {
     contents += quitButton
   }
 
-
-  def newIField = new TextField {
-    text = ""
-    columns = 3
-    horizontalAlignment = Alignment.Right
+  def newLabel(newText: String):Label = new Label {
+    text = newText
+    font = setFont
   }
-
-  val bidInput = newIField
 
   def newTField(initialText: String) = new TextField {
     text = initialText
     columns = 5
     horizontalAlignment = Alignment.Right
+    font = setFont
   }
 
   def restrictHeight(s: Component) {
@@ -81,8 +79,8 @@ class Gui(controller: DPController) extends Frame with Observer {
         println("GUI is starting")
 
       case EnterPlayerName => {
-        val labelPlayer1 = new Label("Hello Player 1 ! Please enter your name: ")
-        val labelPlayer2 = new Label("Hello Player 2 ! Please enter your name: ")
+        val labelPlayer1 = newLabel("Hello Player 1 ! Please enter your name: ")
+        val labelPlayer2 = newLabel("Hello Player 2 ! Please enter your name: ")
         val namePlayer1 = newTField("Mac")
         val namePlayer2 = newTField("Andi")
         val commitButton = new Button(Action("Continue") {
@@ -124,23 +122,13 @@ class Gui(controller: DPController) extends Frame with Observer {
               border = Swing.EmptyBorder(10, 10, 10, 10)
               contents += new BoxPanel(Orientation.Horizontal) {
 
-                contents += new Label(controller.playerName(player1) + ": ")
+                contents += newLabel(controller.playerName(player1) + ": ")
                 for(i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
-                /*contents += picSelection(0, playerStarted)
-              contents += picSelection(1, playerStarted)
-              contents += picSelection(1, playerStarted)*/
-                /*for (index <- 0 until player1.diceCount) {
-                  contents += new Label("" + player1.diceCup.dieCombi(index))
-                  contents += Swing.HStrut(5)
-                }*/
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
-                contents += new Label(controller.playerName(player2) + ": ")
-                for (index <- 0 until player2.diceCount) {
-                  contents += new Label("" + player2.diceCup.dieCombi(index))
-                  contents += Swing.HStrut(5)
-                }
+                contents += newLabel(controller.playerName(player2) + ": ")
+                for(i <- 0 until player2.diceCount) yield contents += picSelection(i, player2)
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -162,22 +150,22 @@ class Gui(controller: DPController) extends Frame with Observer {
                 /*contents += picSelection(0, playerStarted)
               contents += picSelection(1, playerStarted)
               contents += picSelection(1, playerStarted)*/
-                contents += new Label{
-                  text = controller.playerName(player1) + ": "
-                }
-                for (index <- 0 until player1.diceCount) {
-                  contents += new Label("" + player1.diceCup.dieCombi(index))
+                contents += newLabel(controller.playerName(player1) + ": ")
+                for(i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
+                /*for (index <- 0 until player1.diceCount) {
+                  contents += newLabel("" + player1.diceCup.dieCombi(index))
                   contents += Swing.HStrut(5)
-                }
+                }*/
 
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
-                contents += new Label(controller.playerName(player2) + ": ")
-                for (index <- 0 until player2.diceCount) {
-                  contents += new Label("" + player2.diceCup.dieCombi(index))
+                contents += newLabel(controller.playerName(player2) + ": ")
+                for(i <- 0 until player2.diceCount) yield contents += picSelection(i, player2)
+                /*for (index <- 0 until player2.diceCount) {
+                  contents += newLabel("" + player2.diceCup.dieCombi(index))
                   contents += Swing.HStrut(5)
-                }
+                }*/
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -194,21 +182,22 @@ class Gui(controller: DPController) extends Frame with Observer {
         controller.getPlayerStarted match {
           case None =>
           case Some(playerStarted) => {
-            val inputField = newIField
+            val inputField = newTField("")
             contents = new BoxPanel(Orientation.Vertical) {
               border = Swing.EmptyBorder(10, 10, 10, 10)
 
               contents += new BoxPanel(Orientation.Horizontal) {
-                contents += new Label(controller.playerName(playerStarted) + ": ")
+                contents += newLabel(controller.playerName(playerStarted) + ": ")
                 contents += Swing.HStrut(5)
-                for (index <- 0 until playerStarted.diceCount) {
-                  contents += new Label("" + playerStarted.diceCup.dieCombi(index))
+                for(i <- 0 until playerStarted.diceCount) yield contents += picSelection(i, playerStarted)
+                /*for (index <- 0 until playerStarted.diceCount) {
+                  contents += newLabel("" + playerStarted.diceCup.dieCombi(index))
                   contents += Swing.HStrut(5)
-                }
+                }*/
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
-                contents += new Label(controller.playerName(playerStarted) + ", please declare the first bid (e.g. 3,2 means your bid is a double of 3):")
+                contents += newLabel(controller.playerName(playerStarted) + ", please declare the first bid (e.g. 3,2 means your bid is a double of 3):")
                 contents += Swing.HStrut(5)
                 contents += inputField
               }
@@ -232,16 +221,14 @@ class Gui(controller: DPController) extends Frame with Observer {
         contents = new BoxPanel(Orientation.Vertical) {
           border = Swing.EmptyBorder(10, 10, 10, 10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label("Highest bid at the moment from " + controller.playerName(playerWithHighestBid) + " = " + controller.getHighestBidResult)
+            contents += newLabel("Highest bid at the moment from " + controller.playerName(playerWithHighestBid) + " = ")
             contents += Swing.HStrut(5)
-            /*for (index <- 0 until playerStarted.diceCount) {
-              contents += new Label("" + playerStarted.diceCup.dieCombi(index))
-              contents += Swing.HStrut(5)
-            }*/
+            for(i <- 0 until controller.getHighestBidResult.frequency) yield contents += picSelection(i, controller.getHighestBidResult)
+
           }
           contents += Swing.VStrut(10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label("Now it's your turn " + controller.playerName(player))
+            contents += newLabel("Now it's your turn " + controller.playerName(player))
             contents += Swing.HStrut(5)
           }
           contents += Swing.VStrut(10)
@@ -262,25 +249,26 @@ class Gui(controller: DPController) extends Frame with Observer {
       case RequestHigherBid => {
         val player: Player = RequestHigherBid.attachment.asInstanceOf[Player]
         val playerWithHighestBid = controller.getHighestBidPlayer
-        val inputField = newIField
+        val inputField = newTField("")
         contents = new BoxPanel(Orientation.Vertical) {
           border = Swing.EmptyBorder(10, 10, 10, 10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label("Highest bid at the moment from " + controller.playerName(playerWithHighestBid) + " = " + controller.getHighestBidResult)
+            contents += newLabel("Highest bid at the moment from " + controller.playerName(playerWithHighestBid) + " = " + controller.getHighestBidResult)
             contents += Swing.HStrut(5)
           }
           contents += Swing.VStrut(10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label(controller.playerName(player) + ": ")
+            contents += newLabel(controller.playerName(player) + ": ")
             contents += Swing.HStrut(5)
-            for (index <- 0 until player.diceCount) {
-              contents += new Label("" + player.diceCup.dieCombi(index))
+            for(i <- 0 until player.diceCount) yield contents += picSelection(i, player)
+            /*for (index <- 0 until player.diceCount) {
+              contents += newLabel("" + player.diceCup.dieCombi(index))
               contents += Swing.HStrut(5)
-            }
+            }*/
           }
           contents += Swing.VStrut(10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label(controller.playerName(player) + ", please declare your bid :")
+            contents += newLabel(controller.playerName(player) + ", please declare your bid :")
             contents += Swing.HStrut(5)
             contents += inputField
           }
@@ -305,12 +293,12 @@ class Gui(controller: DPController) extends Frame with Observer {
         contents = new BoxPanel(Orientation.Vertical) {
           border = Swing.EmptyBorder(10, 10, 10, 10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label(loserName + " lied. His actual result was " + controller.playerResult(loser) + ".")
+            contents += newLabel(loserName + " lied. His actual result was " + controller.playerResult(loser) + ".")
             contents += Swing.HStrut(5)
           }
           contents += Swing.VStrut(10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label(winnerName + " has won this round!")
+            contents += newLabel(winnerName + " has won this round!")
             contents += Swing.HStrut(5)
           }
           contents += Swing.VStrut(10)
@@ -328,12 +316,12 @@ class Gui(controller: DPController) extends Frame with Observer {
         contents = new BoxPanel(Orientation.Vertical) {
           border = Swing.EmptyBorder(10, 10, 10, 10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label(winnerName + " did not lie. His actual result was " + controller.playerResult(winner.get) + ".")
+            contents += newLabel(winnerName + " did not lie. His actual result was " + controller.playerResult(winner.get) + ".")
             contents += Swing.HStrut(5)
           }
           contents += Swing.VStrut(10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label(winnerName + " has won this round!")
+            contents += newLabel(winnerName + " has won this round!")
             contents += Swing.HStrut(5)
           }
           contents += Swing.VStrut(10)
@@ -350,7 +338,7 @@ class Gui(controller: DPController) extends Frame with Observer {
         contents = new BoxPanel(Orientation.Vertical) {
           border = Swing.EmptyBorder(10, 10, 10, 10)
           contents += new BoxPanel(Orientation.Horizontal) {
-            contents += new Label("...and the winner is " + winner + "!  " + "Congratulations, " + winner + "!")
+            contents += newLabel("...and the winner is " + winner + "!  " + "Congratulations, " + winner + "!")
             contents += Swing.HStrut(5)
           }
           contents += Swing.VStrut(10)
@@ -464,9 +452,29 @@ class Gui(controller: DPController) extends Frame with Observer {
 
     var picPath: java.net.URL = null
 
-    val picList = List[Label]()
-
     val d = p.diceCup.dieCombi(i)
+
+    d match {
+      case 1 => picPath = getClass.getResource("/Zahl1.png")
+      case 2 => picPath = getClass.getResource("/Zahl2.png")
+      case 3 => picPath = getClass.getResource("/Zahl3.png")
+      case 4 => picPath = getClass.getResource("/Zahl4.png")
+      case 5 => picPath = getClass.getResource("/Zahl5.png")
+      case 6 => picPath = getClass.getResource("/Zahl6.png")
+      case _ => picPath = getClass.getResource("/Empty.png")
+    }
+
+    val pic = new Label {
+      icon = new ImageIcon(picPath)
+    }
+    pic
+  }
+
+  def picSelection(i: Int, p: Result): Label = {
+
+    var picPath: java.net.URL = null
+
+    val d = p.dieValue
 
     d match {
       case 1 => picPath = getClass.getResource("/Zahl1.png")
