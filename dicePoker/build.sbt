@@ -25,13 +25,3 @@ libraryDependencies += "log4j" % "log4j" % "1.2.14"
 
 
 fork in run := true
-
-fork in run := true
-
-fork in run := true
-
-fork in run := true
-
-fork in run := true
-
-fork in run := true
