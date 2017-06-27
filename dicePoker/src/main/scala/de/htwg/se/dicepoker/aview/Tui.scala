@@ -3,6 +3,7 @@ package de.htwg.se.dicepoker.aview
 import de.htwg.se.dicepoker.controller.DPController
 import de.htwg.se.dicepoker.model._
 import de.htwg.se.dicepoker.util._
+import org.apache.log4j.Logger
 
 import scala.compat.Platform.EOL
 
@@ -11,6 +12,9 @@ class Tui(controller: DPController) extends Observer {
   val tui = AppConst.tui_symbol_inFrontOfText
   controller.add(this)
   controller.createPlayers
+
+  val logger: Logger = Logger.getLogger(getClass().getName())
+  // log.setLevel(Level.INFO);
 
   def processInputLine() = {
     controller.menuNavigation
@@ -24,7 +28,7 @@ class Tui(controller: DPController) extends Observer {
 
   override def update(e: Event): Unit = {
     e match {
-      case WelcomeMsg => println("Welcome to €€ DICE POKER €€!")
+      case WelcomeMsg => logger.info("Welcome to €€ DICE POKER €€!")
       case EnterPlayerName => {
         val index: Int = EnterPlayerName.attachment.asInstanceOf[Int]
         println("Hello Player " + index + EOL + "Please enter your name:")
