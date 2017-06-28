@@ -147,26 +147,14 @@ class Gui(controller: DPController) extends Frame with Observer {
               border = Swing.EmptyBorder(10, 10, 10, 10)
               contents += new BoxPanel(Orientation.Horizontal) {
                 background = Color.ORANGE
-                //for(i <- 0 until playerStarted.diceCount) yield contents += picSelection(i, playerStarted)
-                /*contents += picSelection(0, playerStarted)
-              contents += picSelection(1, playerStarted)
-              contents += picSelection(1, playerStarted)*/
                 contents += newLabel(controller.playerName(player1) + ": ")
                 for (i <- 0 until player1.diceCount) yield contents += picSelection(i, player1)
-                /*for (index <- 0 until player1.diceCount) {
-                  contents += newLabel("" + player1.diceCup.dieCombi(index))
-                  contents += Swing.HStrut(5)
-                }*/
 
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
                 contents += newLabel(controller.playerName(player2) + ": ")
                 for (i <- 0 until player2.diceCount) yield contents += picSelection(i, player2)
-                /*for (index <- 0 until player2.diceCount) {
-                  contents += newLabel("" + player2.diceCup.dieCombi(index))
-                  contents += Swing.HStrut(5)
-                }*/
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -191,10 +179,6 @@ class Gui(controller: DPController) extends Frame with Observer {
                 contents += newLabel(controller.playerName(playerStarted) + ": ")
                 contents += Swing.HStrut(5)
                 for (i <- 0 until playerStarted.diceCount) yield contents += picSelection(i, playerStarted)
-                /*for (index <- 0 until playerStarted.diceCount) {
-                  contents += newLabel("" + playerStarted.diceCup.dieCombi(index))
-                  contents += Swing.HStrut(5)
-                }*/
               }
               contents += Swing.VStrut(10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -213,7 +197,6 @@ class Gui(controller: DPController) extends Frame with Observer {
               for (e <- contents)
                 e.xLayoutAlignment = 0.0
             }
-            //new FlowPanel(new Label(playerStarted.name + ": "), picSelection(0, playerStarted), picSelection(1, playerStarted), picSelection(2, playerStarted), new Button(Action("Continue") {}))
           }
         }
       case AskIfMistrusts => {

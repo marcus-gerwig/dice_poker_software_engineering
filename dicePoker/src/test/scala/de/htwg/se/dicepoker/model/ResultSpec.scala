@@ -12,7 +12,7 @@ class ResultSpec extends WordSpec with Matchers{
     
     "be higher" in{
       
-      aResult.isHigherThan(otherResult) should be (true)
+      aResult.isHigherThan(otherResult) should be (false)
       
     }
   }

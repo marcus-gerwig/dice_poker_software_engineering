@@ -10,7 +10,7 @@ class RoundSpec extends WordSpec with Matchers{
     val aDiceCup = DiceCup(List(1,2,3,4,5))
     val aPlayer1 = Player("Testplayer1", 5, aDiceCup)
     val aPlayer2 = Player("Testplayer2", 5, aDiceCup) 
-    var aBid = Bid(Result (1,1), aPlayer1)
+    var aBid = Bid(Result (1,1), aPlayer2)
     val aRound = Round(aBid)
     
     "have a winner" in{
