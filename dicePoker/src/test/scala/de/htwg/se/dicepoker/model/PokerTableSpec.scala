@@ -14,9 +14,11 @@ class PokerTableSpec extends WordSpec with Matchers {
     val aTable = PokerTable(players)
 
     "roll the dice of existing dice cups" in {
-
-      aTable.rollTheDice should be(aTable.copy(Vector(aPlayer1, aPlayer2)))
-
+      val updatedTable = aTable.rollTheDice
+      val updatedPlayer1 = updatedTable.players(0)
+      val updatedPlayer2 = updatedTable.players(1)
+      aPlayer1.name should be(updatedPlayer1.name)
+      aPlayer2.name should be(updatedPlayer2.name)
     }
 
   }
