@@ -1,6 +1,6 @@
 package de.htwg.se.dicepoker
 
-import de.htwg.se.dicepoker.controller.DPController
+import de.htwg.se.dicepoker.controller.controllerComponent.DPController
 import de.htwg.se.dicepoker.aview.Tui
 import de.htwg.se.dicepoker.aview.Gui
 
