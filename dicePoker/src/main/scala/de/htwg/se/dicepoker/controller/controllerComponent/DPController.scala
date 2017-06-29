@@ -1,10 +1,12 @@
-package de.htwg.se.dicepoker.controller
+package de.htwg.se.dicepoker.controller.controllerComponent
 
-import de.htwg.se.dicepoker.model.{Bid, Player, PokerTable, Round}
+import de.htwg.se.dicepoker.controller.IController
+import de.htwg.se.dicepoker.model.ITable
+import de.htwg.se.dicepoker.model.tableComponent._
 import de.htwg.se.dicepoker.util._
 
 //noinspection ScalaStyle
-class DPController(var table: PokerTable) extends Observable {
+class DPController(var table: ITable) extends Observable with IController{
 
   var lastLoser: Option[Player] = None
   var playerStarted: Option[Player] = None
@@ -122,15 +124,17 @@ class DPController(var table: PokerTable) extends Observable {
 
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
 
-  def printTable = table.toString()
+  def printTable:Unit = table.toString()
 
   def printPlayer(player: Player) = player.toString()
 
   def getLastLoser = lastLoser
 
-  def playerName(player: Player) = player.name
+  def setLastLoser(ll:Option[Player]):Unit = lastLoser = ll
 
-  def playerResult(player: Player) = player.diceCup.getMaxResult()
+  def playerName(player: Player):String = player.name
+
+  def playerResult(player: Player):Result = player.diceCup.getMaxResult()
 
   def getPlayerStarted: Option[Player] = playerStarted
 
@@ -183,5 +187,6 @@ class DPController(var table: PokerTable) extends Observable {
     else false
   }
 
+  def getTable:ITable = this.table
 }
 

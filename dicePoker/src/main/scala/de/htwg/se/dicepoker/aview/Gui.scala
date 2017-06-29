@@ -1,8 +1,6 @@
 package de.htwg.se.dicepoker.aview
 
 
-import de.htwg.se.dicepoker.controller.DPController
-
 import scala.swing.Alignment
 import scala.swing.Frame
 import scala.swing.Label
@@ -14,7 +12,9 @@ import Swing._
 import java.awt.Color
 import java.net.URL
 
-import de.htwg.se.dicepoker.model._
+import de.htwg.se.dicepoker.controller.IController
+import de.htwg.se.dicepoker.controller.controllerComponent.DPController
+import de.htwg.se.dicepoker.model.tableComponent._
 
 import scala.language.postfixOps
 import de.htwg.se.dicepoker.util.Observer
@@ -22,7 +22,7 @@ import de.htwg.se.dicepoker.util.Event
 import de.htwg.se.dicepoker.util._
 
 //noinspection ScalaStyle
-class Gui(controller: DPController) extends Frame with Observer {
+class Gui(controller: IController) extends Frame with Observer {
 
   title = "Dice Poker"
   minimumSize = new Dimension(300, 100)
@@ -117,8 +117,8 @@ class Gui(controller: DPController) extends Frame with Observer {
         controller.getLastLoser match {
           case None => {
             title = "Dice were roled ..."
-            val player1 = controller.table.players(0)
-            val player2 = controller.table.players(1)
+            val player1 = controller.getTable.players(0)
+            val player2 = controller.getTable.players(1)
             contents = new BoxPanel(Orientation.Vertical) {
               border = Swing.EmptyBorder(10, 10, 10, 10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -141,8 +141,8 @@ class Gui(controller: DPController) extends Frame with Observer {
           }
           case Some(lastLoser) => {
             title = "Dice were roled ..."
-            val player1 = controller.table.players(0)
-            val player2 = controller.table.players(1)
+            val player1 = controller.getTable.players(0)
+            val player2 = controller.getTable.players(1)
             contents = new BoxPanel(Orientation.Vertical) {
               border = Swing.EmptyBorder(10, 10, 10, 10)
               contents += new BoxPanel(Orientation.Horizontal) {
@@ -328,7 +328,7 @@ class Gui(controller: DPController) extends Frame with Observer {
           contents += Swing.VStrut(10)
           contents += new BoxPanel(Orientation.Horizontal) {
             contents += new Button(Action("New Game") {
-              controller.lastLoser = None
+              controller.setLastLoser(None)
               roundNr = 1
               update(EnterPlayerName)
             })
@@ -356,7 +356,7 @@ class Gui(controller: DPController) extends Frame with Observer {
     }
   }
 
-  
+
   def picSelection(i: Int, p: Player): Label = {
 
     var picPath: java.net.URL = null

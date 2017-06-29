@@ -1,6 +1,6 @@
 
 
-package de.htwg.se.dicepoker.model
+package de.htwg.se.dicepoker.model.tableComponent
 import scala.util.Random
 //noinspection ScalaStyle
 case class DiceCup(dieCombi: List[Int]) {

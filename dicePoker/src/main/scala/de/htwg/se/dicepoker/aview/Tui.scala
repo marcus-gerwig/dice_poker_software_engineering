@@ -1,14 +1,14 @@
 package de.htwg.se.dicepoker.aview
 
-import de.htwg.se.dicepoker.controller.DPController
-import de.htwg.se.dicepoker.model._
+import de.htwg.se.dicepoker.controller.IController
+import de.htwg.se.dicepoker.model.tableComponent._
 import de.htwg.se.dicepoker.util._
 import org.apache.log4j.{LogManager, Logger}
 
 import scala.compat.Platform.EOL
 
 //noinspection ScalaStyle
-class Tui(controller: DPController) extends Observer {
+class Tui(controller: IController) extends Observer{
   val tui = AppConst.tui_symbol_inFrontOfText
   val logger: Logger = Logger.getLogger(this.getClass.getName)
   controller.add(this)

@@ -1,4 +1,4 @@
-package de.htwg.se.dicepoker.model
+package de.htwg.se.dicepoker.model.tableComponent
 
 import org.scalatest.WordSpec
 import org.scalatest.Matchers

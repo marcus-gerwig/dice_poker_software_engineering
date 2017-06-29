@@ -1,6 +1,9 @@
-package de.htwg.se.dicepoker.model
+package de.htwg.se.dicepoker.model.tableComponent
+
+import de.htwg.se.dicepoker.model.ITable
+
 //noinspection ScalaStyle
-case class PokerTable(players: Vector[Player]) {
+case class PokerTable(players: Vector[Player]) extends ITable{
 
   def updateTable(players: Vector[Player]) = copy(players)
 
