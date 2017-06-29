@@ -124,7 +124,7 @@ class DPController(var table: ITable) extends Observable with IController{
 
   def newBid(input: String, player: Player): Bid = new Bid(null, player).convertStringToBid(input)
 
-  def printTable:Unit = table.toString()
+  def printTable:String = table.toString()
 
   def printPlayer(player: Player) = player.toString()
 

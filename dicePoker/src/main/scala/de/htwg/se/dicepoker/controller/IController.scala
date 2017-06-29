@@ -16,7 +16,7 @@ trait IController extends Observable {
 
   def setPlayerName(index: Int, name: String)
 
-  def printTable: Unit
+  def printTable: String
 
   def beginRound: Unit
 
